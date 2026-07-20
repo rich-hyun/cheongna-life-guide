@@ -1,3 +1,118 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#006c5a">
+  <title>하나로 패스 | 청라 HQ 가이드</title>
+  <meta name="description" content="하나금융그룹 청라 HQ와 주변 런치, 미팅, 애프터, 하나로컬 Gate를 한 번에 살펴보는 모바일 가이드">
+  <meta property="og:title" content="하나로 패스 | 청라 HQ 가이드">
+  <meta property="og:description" content="청라 HQ부터 런치 Gate, 미팅 Gate, 애프터 Gate, 하나로컬 Gate까지">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="logo_stack.png" type="image/png">
+  <link rel="stylesheet" href="./style.css?v=20260720-2">
+</head>
+<body>
+  <div class="page-bg" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="하나로 패스 홈으로 이동">
+      <img src="logo_horizontal_white.png" alt="하나금융그룹">
+    </a>
+    <span class="ambassador-badge">제20기 하나금융그룹 SMART 홍보대사</span>
+  </header>
+
+  <main id="top">
+    <section class="hero shell" aria-labelledby="mainTitle">
+      <div class="hero-ticket">
+        <div class="ticket-copy">
+          <p class="eyebrow light">WELCOME TO 청라,<br>TOGETHER WITH 하나</p>
+          <h1 id="mainTitle">하나로<br>PASS</h1>
+          <p class="hero-desc">청라 HQ를 중심으로 내부 공간과 4개의 Gate를 탐색하는 모바일 가이드</p>
+        </div>
+        <div class="flight-line" aria-hidden="true">✈︎</div>
+        <img class="hero-character" src="char_duo_1.png" alt="엄지를 든 하나금융그룹 캐릭터">
+        <div class="barcode" aria-hidden="true"></div>
+      </div>
+
+      <div class="hero-actions" aria-label="주요 기능 바로가기">
+        <a class="primary-btn" href="#gate-list"><span aria-hidden="true">🎟️</span> 청라 HQ·Gate 확인하기</a>
+        <a class="outline-btn" href="#roulette"><span aria-hidden="true">⚙️</span> 룰렛 돌리기</a>
+      </div>
+    </section>
+
+    <section id="roulette" class="roulette-area shell" aria-labelledby="rouletteTitle">
+      <div class="roulette-card">
+        <div class="roulette-copy">
+          <p class="section-kicker">오늘의 추천 장소 뽑기!</p>
+          <h2 id="rouletteTitle">Gate 선택 후 오늘의 추천 장소를 뽑아보세요.</h2>
+          <p class="hand-note">어디로 갈지 고민될 땐<br>룰렛을 돌려보세요!</p>
+          <div class="roulette-control">
+            <label for="rouletteGate">탑승 Gate</label>
+            <select id="rouletteGate" aria-label="룰렛 Gate 선택"></select>
+            <button id="spinBtn" class="primary-btn" type="button">시작</button>
+          </div>
+        </div>
+
+        <div class="wheel-wrap">
+          <div class="wheel-pointer" aria-hidden="true"></div>
+          <canvas id="wheelCanvas" width="420" height="420" aria-label="장소 추천 룰렛"></canvas>
+        </div>
+
+        <div id="rouletteResult" class="roulette-result" aria-live="polite" aria-atomic="true">
+          <span>READY</span>
+          <strong>Gate를 선택하고 룰렛을 돌려주세요</strong>
+          <p>추천 장소와 이동시간·거리까지 바로 확인할 수 있어요.</p>
+        </div>
+      </div>
+    </section>
+
+    <nav class="gate-nav shell" id="gateNav" aria-label="청라 HQ 및 Gate 바로가기"></nav>
+
+    <section id="gate-list" class="gate-list shell" aria-label="청라 HQ 및 추천 장소 목록"></section>
+
+    <section id="qr" class="qr-section shell" aria-labelledby="qrTitle">
+      <div class="qr-card">
+        <div>
+          <p class="section-kicker">QR Landing</p>
+          <h2 id="qrTitle">하나로 PASS로 바로 접속</h2>
+          <p>현장 리플렛이나 안내판에 연결할 수 있도록 현재 배포 주소 기준 QR을 자동 생성합니다.</p>
+          <button class="outline-btn compact" id="copyLinkBtn" type="button">현재 주소 복사</button>
+        </div>
+        <div class="qr-box">
+          <img id="qrImage" alt="현재 페이지 접속 QR 코드" width="150" height="150">
+          <span>SCAN TO PASS</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <img src="char_duo_2.png" alt="하나금융그룹 캐릭터">
+    <div>
+      <strong>청라에서의 하루, 하나로 PASS!</strong>
+      <span>즐거운 미션 수행 되세요! 💚</span>
+    </div>
+  </footer>
+
+  <div class="modal" id="spaceModal" hidden>
+    <div class="modal-backdrop" data-modal-close></div>
+    <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc">
+      <button class="modal-close" id="modalCloseBtn" type="button" aria-label="공간 상세 닫기">×</button>
+      <div class="modal-media">
+        <img id="modalImage" alt="" width="1190" height="720">
+      </div>
+      <div class="modal-body">
+        <span class="modal-type" id="modalType"></span>
+        <h2 id="modalTitle"></h2>
+        <p class="modal-mood" id="modalMood"></p>
+        <p id="modalDesc"></p>
+        <p class="modal-notice">공간 이미지는 제공된 콘셉트 자료를 바탕으로 구성했으며 실제 운영 및 출입 가능 범위는 달라질 수 있습니다.</p>
+      </div>
+    </section>
+  </div>
+
+  <script>
 const GATES = [
   {
     id: 'hq',
@@ -81,6 +196,10 @@ const GATES = [
     places: [
       {
         name: '삼대청국장 청라본점',
+        image: 'assets/lunch-samdae.png',
+        imageAlt: '삼대청국장 청라본점 외관',
+        photoCredit: '사용자 제공 사진',
+        rating: 5,
         type: '한식',
         mood: '든든한 한식',
         desc: '속 편하게 먹기 좋은 한식 점심 코스입니다.',
@@ -90,6 +209,10 @@ const GATES = [
       },
       {
         name: '두진옥 수제순두부',
+        image: 'assets/lunch-dujinok.png',
+        imageAlt: '두진옥 수제순두부 매장 외관',
+        photoCredit: '사용자 제공 사진',
+        rating: 5,
         type: '순두부',
         mood: '부담 없는 점심',
         desc: '가볍지만 든든하게 먹기 좋은 순두부 코스입니다.',
@@ -99,6 +222,10 @@ const GATES = [
       },
       {
         name: '은옥 청라본점',
+        image: 'assets/lunch-eunok.png',
+        imageAlt: '은옥 청라본점 매장 외관',
+        photoCredit: '사용자 제공 사진',
+        rating: 4,
         type: '돈까스',
         mood: '정갈한 돈까스',
         desc: '깔끔한 메뉴 구성이 필요한 점심에 어울립니다.',
@@ -107,13 +234,17 @@ const GATES = [
         map: 'https://map.naver.com/p/search/%EC%9D%80%EC%98%A5%20%EC%B2%AD%EB%9D%BC%EB%B3%B8%EC%A0%90'
       },
       {
-        name: '해밀루',
+        name: '해미루',
+        image: 'assets/lunch-haemiru.png',
+        imageAlt: '해미루 매장 외관',
+        photoCredit: '사용자 제공 사진',
+        rating: 4,
         type: '식당',
         mood: '점심 회식에도 좋은 곳',
         desc: '여럿이 가도 무난한 점심·식사 후보입니다.',
         travel: '차로 약 8분 · 3.4km',
         travelIcon: '🚗',
-        map: 'https://map.naver.com/p/search/%ED%95%B4%EB%B0%80%EB%A3%A8%20%EC%B2%AD%EB%9D%BC'
+        map: 'https://map.naver.com/p/search/%ED%95%B4%EB%AF%B8%EB%A3%A8%20%EC%B2%AD%EB%9D%BC'
       }
     ]
   },
@@ -169,47 +300,63 @@ const GATES = [
     id: 'after',
     label: '애프터 Gate',
     title: '애프터 Gate',
-    subtitle: '퇴근 후 힐링 & 저녁',
+    subtitle: '퇴근 후 회식 & 한잔',
     tag: 'AFTER',
     icon: '🥂',
     tone: 'blue',
-    intro: '퇴근 후 저녁, 산책, 야간 카페 무드까지 하루를 마무리하는 코스입니다.',
+    intro: '회식, 특별한 저녁, 와인 한잔까지 퇴근 후 분위기에 맞춰 고를 수 있는 코스입니다.',
     places: [
       {
+        name: '곱창남 청라점',
+        image: 'assets/after-01.png',
+        imageAlt: '곱창 요리가 차려진 곱창남 청라점 참고 이미지',
+        photoCredit: '사용자 제공 시안 이미지',
+        rating: 5,
+        type: '곱창·회식',
+        mood: '팀 회식 1순위 · 알찬 곱창',
+        desc: '여럿이 둘러앉아 든든하게 즐기기 좋은 회식 후보입니다.',
+        travel: '차로 약 15분 · 6.6km',
+        travelIcon: '🚗',
+        map: 'https://map.naver.com/p/search/%EA%B3%B1%EC%B0%BD%EB%82%A8%20%EC%B2%AD%EB%9D%BC%EC%A0%90'
+      },
+      {
         name: '쇼미더크랩 청라점',
-        type: '해산물',
-        mood: '퇴근 후 특별한 저녁',
-        desc: '조금 특별한 저녁 모임이 필요할 때 추천하는 코스입니다.',
-        travel: '차로 약 12분 · 5.0km',
+        image: 'assets/after-02.png',
+        imageAlt: '푸짐한 시푸드 요리 참고 이미지',
+        photoCredit: '사용자 제공 시안 이미지',
+        rating: 4,
+        type: '시푸드',
+        mood: '푸짐한 시푸드 회식',
+        desc: '특별한 메뉴와 풍성한 구성이 필요한 모임에 어울립니다.',
+        travel: '차로 약 16분 · 7.1km',
         travelIcon: '🚗',
         map: 'https://map.naver.com/p/search/%EC%87%BC%EB%AF%B8%EB%8D%94%ED%81%AC%EB%9E%A9%20%EC%B2%AD%EB%9D%BC%EC%A0%90'
       },
       {
-        name: 'Taco Dot',
-        type: '멕시칸',
-        mood: '캐주얼한 저녁 모임',
-        desc: '퇴근 후 가볍게 분위기를 바꾸기 좋은 저녁 후보입니다.',
-        travel: '차로 약 15분 · 6.1km',
+        name: '오늘와인한잔 청라수변공원점',
+        image: 'assets/after-03.png',
+        imageAlt: '와인과 곁들임 메뉴가 놓인 테이블 참고 이미지',
+        photoCredit: '사용자 제공 시안 이미지',
+        rating: 4,
+        type: '와인바',
+        mood: '수변뷰 곁들인 와인 한잔',
+        desc: '식사 뒤 가볍게 대화하며 하루를 마무리하기 좋은 코스입니다.',
+        travel: '차로 약 15분 · 6.7km',
         travelIcon: '🚗',
-        map: 'https://map.naver.com/p/search/Taco%20Dot%20%EC%B2%AD%EB%9D%BC'
+        map: 'https://map.naver.com/p/search/%EC%98%A4%EB%8A%98%EC%99%80%EC%9D%B8%ED%95%9C%EC%9E%94%20%EC%B2%AD%EB%9D%BC%EC%88%98%EB%B3%80%EA%B3%B5%EC%9B%90%EC%A0%90'
       },
       {
-        name: '카페다이브',
-        type: '야간 카페',
-        mood: '야간 카페 무드',
-        desc: '식사 후 대화하거나 가볍게 쉬기 좋은 카페 코스입니다.',
-        travel: '차로 약 13분 · 5.4km',
+        name: '유케집 청라본점',
+        image: 'assets/after-04.png',
+        imageAlt: '육회 메뉴가 담긴 그릇 참고 이미지',
+        photoCredit: '사용자 제공 시안 이미지',
+        rating: 3,
+        type: '육회·이자카야',
+        mood: '캐주얼한 이자카야 분위기',
+        desc: '부담 없이 한잔하며 이야기 나누기 좋은 캐주얼한 저녁 후보입니다.',
+        travel: '차로 약 16분 · 7.0km',
         travelIcon: '🚗',
-        map: 'https://map.naver.com/p/search/%EC%B9%B4%ED%8E%98%EB%8B%A4%EC%9D%B4%EB%B8%8C%20%EC%B2%AD%EB%9D%BC'
-      },
-      {
-        name: '청라호수공원',
-        type: '공원',
-        mood: '가볍게 산책하는 코스',
-        desc: '퇴근 후 머리 식히며 걷기 좋은 청라 대표 산책지입니다.',
-        travel: '도보 약 18분 · 1.4km',
-        travelIcon: '🚶',
-        map: 'https://map.naver.com/p/search/%EC%B2%AD%EB%9D%BC%ED%98%B8%EC%88%98%EA%B3%B5%EC%9B%90'
+        map: 'https://map.naver.com/p/search/%EC%9C%A0%EC%BC%80%EC%A7%91%20%EC%B2%AD%EB%9D%BC%EB%B3%B8%EC%A0%90'
       }
     ]
   },
@@ -217,48 +364,605 @@ const GATES = [
     id: 'local',
     label: '하나로컬 Gate',
     title: '하나로컬 Gate',
-    subtitle: '청라의 명소 & 핫플',
+    subtitle: '청라의 명소 & 힐링',
     tag: 'LOCAL',
     icon: '📍',
     tone: 'lime',
-    intro: '청라에 처음 오는 사람에게 소개하기 좋은 지역 공간과 주말 코스입니다.',
+    intro: '청라에 처음 오는 사람에게 추천하기 좋은 노을, 전망, 수변 산책, 실내 나들이 코스입니다.',
     places: [
       {
         name: '정서진',
+        image: 'assets/local-01.png',
+        imageAlt: '서해 노을이 펼쳐진 정서진 참고 이미지',
+        photoCredit: '사용자 제공 시안 이미지',
+        rating: 5,
         type: '일몰 명소',
-        mood: '석양 명소',
-        desc: '서해 노을을 보기 좋은 인천 서구 대표 로컬 명소입니다.',
-        travel: '차로 약 18분 · 10.5km',
+        mood: '서해로 지는 노을 명소 · 가장 가까운 힐링',
+        desc: '서해의 노을과 정서진 상징 공간을 함께 즐길 수 있는 대표 로컬 코스입니다.',
+        travel: '차로 약 10분 · 4.5km',
         travelIcon: '🚗',
         map: 'https://map.naver.com/p/search/%EC%A0%95%EC%84%9C%EC%A7%84'
       },
       {
-        name: '청라 커낼웨이',
-        type: '수변 산책',
-        mood: '청라를 느끼는 산책 코스',
-        desc: '청라 중심 생활권 분위기를 느낄 수 있는 수변 산책 코스입니다.',
-        travel: '도보 약 16분 · 1.2km',
-        travelIcon: '🚶',
-        map: 'https://map.naver.com/p/search/%EC%B2%AD%EB%9D%BC%20%EC%BB%A4%EB%82%BC%EC%9B%A8%EC%9D%B4'
-      },
-      {
         name: '아라타워 전망대',
+        image: 'assets/local-02.png',
+        imageAlt: '푸른 하늘 아래 아라타워 전망대 참고 이미지',
+        photoCredit: '사용자 제공 시안 이미지',
+        rating: 4,
         type: '전망대',
-        mood: '탁 트인 전망',
-        desc: '정서진과 아라뱃길을 함께 둘러보기 좋은 전망 코스입니다.',
-        travel: '차로 약 20분 · 11.8km',
+        mood: '청라를 한눈에 담는 전망',
+        desc: '높은 곳에서 정서진과 경인아라뱃길 주변 풍경을 내려다보기 좋은 코스입니다.',
+        travel: '차로 약 10분 · 4.6km',
         travelIcon: '🚗',
         map: 'https://map.naver.com/p/search/%EC%95%84%EB%9D%BC%ED%83%80%EC%9B%8C%20%EC%A0%84%EB%A7%9D%EB%8C%80'
       },
       {
+        name: '청라 커낼웨이 수변공원',
+        image: 'assets/local-03.png',
+        imageAlt: '청라 커낼웨이 수변 산책로 안내 이미지',
+        photoCredit: '현장 사진 교체 가능',
+        rating: 4,
+        type: '수변 산책',
+        mood: '물길 따라 걷는 수변 산책',
+        desc: '청라 중심의 수로를 따라 산책과 주변 상권을 함께 둘러보기 좋은 코스입니다.',
+        travel: '차로 약 13분 · 5.8km',
+        travelIcon: '🚗',
+        map: 'https://map.naver.com/p/search/%EC%B2%AD%EB%9D%BC%20%EC%BB%A4%EB%82%BC%EC%9B%A8%EC%9D%B4%20%EC%88%98%EB%B3%80%EA%B3%B5%EC%9B%90'
+      },
+      {
         name: '국립생물자원관',
+        image: 'assets/local-04.png',
+        imageAlt: '국립생물자원관 외관과 야외 공간 참고 이미지',
+        photoCredit: '사용자 제공 시안 이미지',
+        rating: 4,
         type: '전시·문화',
-        mood: '주말 가볍게 둘러보기',
-        desc: '생태 전시와 교육 콘텐츠를 볼 수 있는 지역 문화 공간입니다.',
-        travel: '차로 약 12분 · 5.0km',
+        mood: '실내 나들이 · 가족 동반 코스',
+        desc: '생물 표본과 전시, 체험 콘텐츠를 함께 볼 수 있는 실내 나들이 후보입니다.',
+        travel: '차로 약 13분 · 6.0km',
         travelIcon: '🚗',
         map: 'https://map.naver.com/p/search/%EA%B5%AD%EB%A6%BD%EC%83%9D%EB%AC%BC%EC%9E%90%EC%9B%90%EA%B4%80'
       }
     ]
   }
 ];
+
+</script>
+  <script>
+'use strict';
+
+let currentRotation = 0;
+let isSpinning = false;
+let activeQrProvider = 0;
+let lastFocusedElement = null;
+let resizeTimer = null;
+
+const DEFAULT_DEPLOY_URL = 'https://rich-hyun.github.io/cheongna-life-guide/';
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const wheelColors = ['#006c5a', '#009178', '#00a886', '#dff9ef', '#f4fffb', '#bdebdc'];
+
+const navEl = document.getElementById('gateNav');
+const listEl = document.getElementById('gate-list');
+const rouletteGateEl = document.getElementById('rouletteGate');
+const canvas = document.getElementById('wheelCanvas');
+const ctx = canvas?.getContext('2d');
+const spinBtn = document.getElementById('spinBtn');
+const resultEl = document.getElementById('rouletteResult');
+const qrImage = document.getElementById('qrImage');
+const copyLinkBtn = document.getElementById('copyLinkBtn');
+const spaceModal = document.getElementById('spaceModal');
+const modalCloseBtn = document.getElementById('modalCloseBtn');
+const modalImage = document.getElementById('modalImage');
+const modalType = document.getElementById('modalType');
+const modalTitle = document.getElementById('modalTitle');
+const modalMood = document.getElementById('modalMood');
+const modalDesc = document.getElementById('modalDesc');
+
+function gateById(id) {
+  return GATES.find((gate) => gate.id === id) || GATES[0];
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>'"]/g, (character) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  })[character]);
+}
+
+function safeLink(url) {
+  const value = String(url ?? '');
+  return /^https:\/\//i.test(value) ? value : '#';
+}
+
+function renderNav() {
+  if (!navEl) return;
+  navEl.innerHTML = GATES.map((gate, index) => `
+    <a href="#gate-${escapeHtml(gate.id)}" data-gate-link="${escapeHtml(gate.id)}" class="${index === 0 ? 'active' : ''}">
+      <span aria-hidden="true">${gate.icon}</span> ${escapeHtml(gate.label)}
+    </a>
+  `).join('');
+}
+
+function renderInternalPlaceCard(place, gateId, index) {
+  return `
+    <article class="place-card has-media">
+      <div class="card-media">
+        <img src="${escapeHtml(place.image)}" alt="${escapeHtml(place.imageAlt || place.name)}" loading="lazy" decoding="async">
+      </div>
+      <div class="card-content">
+        <span class="type">${escapeHtml(place.type)}</span>
+        <h3>${escapeHtml(place.name)}</h3>
+        <p class="mood">${escapeHtml(place.mood)}</p>
+        <p class="desc">${escapeHtml(place.desc)}</p>
+        <button class="detail-btn" type="button" data-space-gate="${escapeHtml(gateId)}" data-space-index="${index}" aria-label="${escapeHtml(place.name)} 상세 이미지 보기">공간 자세히 보기</button>
+      </div>
+    </article>
+  `;
+}
+
+function renderPlaceCard(place, gateId, index) {
+  if (place.internal && place.image) {
+    return renderInternalPlaceCard(place, gateId, index);
+  }
+
+  if (place.coming) {
+    return `
+      <article class="place-card placeholder">
+        <div class="placeholder-icon" aria-hidden="true">${escapeHtml(place.travelIcon)}</div>
+        <h3>${escapeHtml(place.name)}</h3>
+        <p class="mood">${escapeHtml(place.mood)}</p>
+        <span class="coming-pill">coming soon</span>
+      </article>
+    `;
+  }
+
+  const rating = Number.isFinite(Number(place.rating))
+    ? Math.max(0, Math.min(5, Number(place.rating)))
+    : 0;
+  const ratingHtml = rating
+    ? `<span class="card-rating" aria-label="추천도 ${rating}점">${'★'.repeat(rating)}<span class="empty">${'★'.repeat(5 - rating)}</span></span>`
+    : '';
+  const photoCredit = place.photoCredit
+    ? `<span class="photo-credit">${escapeHtml(place.photoCredit)}</span>`
+    : '';
+
+  if (place.image) {
+    return `
+      <article class="place-card has-media external-photo">
+        <div class="card-media">
+          <img src="${escapeHtml(place.image)}" alt="${escapeHtml(place.imageAlt || place.name)}" loading="lazy" decoding="async">
+          ${photoCredit}
+        </div>
+        <div class="card-content">
+          <span class="type">${escapeHtml(place.type)}</span>
+          <div class="card-title-row">
+            <h3>${escapeHtml(place.name)}</h3>
+            ${ratingHtml}
+          </div>
+          <p class="mood">${escapeHtml(place.mood)}</p>
+          <p class="desc">${escapeHtml(place.desc)}</p>
+          <div class="travel-chip"><span aria-hidden="true">${escapeHtml(place.travelIcon)}</span><strong>${escapeHtml(place.travel)}</strong></div>
+          <a class="map-link" href="${safeLink(place.map)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(place.name)} 네이버지도에서 보기">네이버지도</a>
+        </div>
+      </article>
+    `;
+  }
+
+  return `
+    <article class="place-card">
+      <span class="type">${escapeHtml(place.type)}</span>
+      <div class="card-title-row">
+        <h3>${escapeHtml(place.name)}</h3>
+        ${ratingHtml}
+      </div>
+      <p class="mood">${escapeHtml(place.mood)}</p>
+      <p class="desc">${escapeHtml(place.desc)}</p>
+      <div class="travel-chip"><span aria-hidden="true">${escapeHtml(place.travelIcon)}</span><strong>${escapeHtml(place.travel)}</strong></div>
+      <a class="map-link" href="${safeLink(place.map)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(place.name)} 네이버지도에서 보기">네이버지도</a>
+    </article>
+  `;
+}
+
+function renderGateFeature(gate) {
+  if (!gate.heroImage) return '';
+  const highlights = Array.isArray(gate.highlights)
+    ? `<ul class="highlight-list">${gate.highlights.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
+    : '';
+
+  return `
+    <div class="hq-feature">
+      <img src="${escapeHtml(gate.heroImage)}" alt="${escapeHtml(gate.heroAlt || gate.title)}" loading="eager" decoding="async">
+      <div class="hq-feature-copy">
+        <p class="hq-feature-kicker">HANA DREAM TOWN · GROUP HQ</p>
+        <h3>청라의 새로운 업무 랜드마크</h3>
+        <p>업무, 휴식, 미팅, 교류가 하나의 흐름으로 이어지는 청라 HQ의 공간 콘셉트를 만나보세요.</p>
+        ${highlights}
+      </div>
+    </div>
+    <p class="hq-source-note"><span aria-hidden="true">ℹ️</span><span>공간 이미지는 제공된 콘셉트 자료를 바탕으로 구성했으며, 세부 배치와 실제 출입 가능 공간은 운영 안내에 따라 달라질 수 있습니다.</span></p>
+  `;
+}
+
+function renderGateList() {
+  if (!listEl) return;
+  listEl.innerHTML = GATES.map((gate) => `
+    <section class="gate-block" id="gate-${escapeHtml(gate.id)}" data-tone="${escapeHtml(gate.tone)}" data-gate-section="${escapeHtml(gate.id)}">
+      <header class="gate-head">
+        <div class="gate-title"><span aria-hidden="true">${gate.icon}</span><span>${escapeHtml(gate.title)}</span></div>
+        <div class="gate-subtitle">${escapeHtml(gate.subtitle)}</div>
+      </header>
+      <p class="gate-intro">${escapeHtml(gate.intro)}</p>
+      ${renderGateFeature(gate)}
+      <div class="place-grid ${gate.id === 'hq' ? 'hq-grid' : ''}">
+        ${gate.places.map((place, index) => renderPlaceCard(place, gate.id, index)).join('')}
+      </div>
+    </section>
+  `).join('');
+}
+
+function playableGates() {
+  return GATES.filter((gate) => gate.roulette !== false && gate.places.some((place) => !place.coming));
+}
+
+function renderRouletteSelect() {
+  if (!rouletteGateEl) return;
+  const gates = playableGates();
+  rouletteGateEl.innerHTML = gates.map((gate) => `
+    <option value="${escapeHtml(gate.id)}">${gate.icon} ${escapeHtml(gate.label)}</option>
+  `).join('');
+  rouletteGateEl.value = gates[0]?.id || '';
+}
+
+function drawWheel(gate) {
+  if (!canvas || !ctx || !gate) return;
+
+  const places = gate.places.filter((place) => !place.coming);
+  if (!places.length) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    return;
+  }
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const size = 420;
+  canvas.width = Math.round(size * dpr);
+  canvas.height = Math.round(size * dpr);
+  canvas.style.width = `${size}px`;
+  canvas.style.maxWidth = '100%';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, size, size);
+
+  const centerX = size / 2;
+  const centerY = size / 2;
+  const radius = size / 2 - 14;
+  const slice = Math.PI * 2 / places.length;
+
+  places.forEach((place, index) => {
+    const start = index * slice;
+    const end = (index + 1) * slice;
+
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    ctx.arc(centerX, centerY, radius, start, end);
+    ctx.closePath();
+    ctx.fillStyle = wheelColors[index % wheelColors.length];
+    ctx.fill();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = 'rgba(255,255,255,.92)';
+    ctx.stroke();
+
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    ctx.rotate(start + slice / 2);
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = index >= 3 ? '#00463c' : '#ffffff';
+    ctx.font = '900 18px system-ui, sans-serif';
+    const label = place.name.length > 8 ? `${place.name.slice(0, 8)}…` : place.name;
+    ctx.fillText(label, radius - 24, 0);
+    ctx.restore();
+  });
+
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, 58, 0, Math.PI * 2);
+  ctx.fillStyle = '#00463c';
+  ctx.fill();
+  ctx.lineWidth = 7;
+  ctx.strokeStyle = '#ffffff';
+  ctx.stroke();
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = '1000 23px system-ui, sans-serif';
+  ctx.fillText('시작', centerX, centerY + 1);
+}
+
+function showRouletteResult(gate, place) {
+  if (!resultEl) return;
+  resultEl.innerHTML = `
+    <span>${escapeHtml(gate.label)}</span>
+    <strong>${escapeHtml(place.name)}</strong>
+    <p>${escapeHtml(place.travelIcon)} ${escapeHtml(place.travel)} · ${escapeHtml(place.mood)}</p>
+    <a class="map-link" href="${safeLink(place.map)}" target="_blank" rel="noopener noreferrer">네이버지도에서 길 확인</a>
+  `;
+}
+
+function spinWheel() {
+  if (isSpinning || !rouletteGateEl || !canvas || !spinBtn || !resultEl) return;
+
+  const gate = gateById(rouletteGateEl.value);
+  const places = gate.places.filter((place) => !place.coming);
+  if (!places.length) return;
+
+  isSpinning = true;
+  spinBtn.disabled = true;
+  rouletteGateEl.disabled = true;
+
+  const pickedIndex = Math.floor(Math.random() * places.length);
+  const sliceDegrees = 360 / places.length;
+  const selectedCenter = pickedIndex * sliceDegrees + sliceDegrees / 2;
+  const desiredAngle = 270 - selectedCenter;
+  const normalizedCurrent = ((currentRotation % 360) + 360) % 360;
+  const forwardAdjustment = ((desiredAngle - normalizedCurrent) % 360 + 360) % 360;
+  const extraTurns = 360 * (5 + Math.floor(Math.random() * 3));
+  currentRotation += extraTurns + forwardAdjustment;
+
+  canvas.style.transform = `rotate(${currentRotation}deg)`;
+  resultEl.innerHTML = '<span>SPINNING</span><strong>오늘의 장소를 고르는 중...</strong><p>Gate와 이동 정보를 함께 확인해요.</p>';
+
+  const finishDelay = prefersReducedMotion ? 120 : 4300;
+  window.setTimeout(() => {
+    showRouletteResult(gate, places[pickedIndex]);
+    spinBtn.disabled = false;
+    rouletteGateEl.disabled = false;
+    isSpinning = false;
+  }, finishDelay);
+}
+
+function openSpaceModal(gateId, placeIndex, triggerElement) {
+  if (!spaceModal || !modalImage || !modalType || !modalTitle || !modalMood || !modalDesc) return;
+  const gate = gateById(gateId);
+  const place = gate?.places?.[Number(placeIndex)];
+  if (!place || !place.internal) return;
+
+  lastFocusedElement = triggerElement || document.activeElement;
+  modalImage.src = place.image;
+  modalImage.alt = place.imageAlt || place.name;
+  modalType.textContent = place.type;
+  modalTitle.textContent = place.name;
+  modalMood.textContent = place.mood;
+  modalDesc.textContent = place.desc;
+  spaceModal.hidden = false;
+  document.body.classList.add('modal-open');
+  modalCloseBtn?.focus();
+}
+
+function closeSpaceModal() {
+  if (!spaceModal || spaceModal.hidden) return;
+  spaceModal.hidden = true;
+  document.body.classList.remove('modal-open');
+  if (modalImage) modalImage.src = '';
+  if (lastFocusedElement instanceof HTMLElement) lastFocusedElement.focus();
+}
+
+function setupSpaceModal() {
+  listEl?.addEventListener('click', (event) => {
+    const button = event.target.closest('.detail-btn');
+    if (!button) return;
+    openSpaceModal(button.dataset.spaceGate, button.dataset.spaceIndex, button);
+  });
+
+  modalCloseBtn?.addEventListener('click', closeSpaceModal);
+  spaceModal?.querySelector('[data-modal-close]')?.addEventListener('click', closeSpaceModal);
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && spaceModal && !spaceModal.hidden) {
+      closeSpaceModal();
+    }
+  });
+}
+
+function resolvePublicUrl() {
+  const localHosts = new Set(['localhost', '127.0.0.1', '::1']);
+  if (window.location.protocol === 'file:' || localHosts.has(window.location.hostname)) {
+    return DEFAULT_DEPLOY_URL;
+  }
+  return window.location.href.split('#')[0];
+}
+
+function qrProviderUrl(providerIndex, url) {
+  const encodedUrl = encodeURIComponent(url);
+  const providers = [
+    `https://quickchart.io/qr?size=300&margin=1&text=${encodedUrl}`,
+    `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=8&data=${encodedUrl}`
+  ];
+  return providers[providerIndex] || providers[0];
+}
+
+function setupQr() {
+  if (!qrImage || !copyLinkBtn) return;
+  const publicUrl = resolvePublicUrl();
+  activeQrProvider = 0;
+  qrImage.src = qrProviderUrl(activeQrProvider, publicUrl);
+  qrImage.addEventListener('error', () => {
+    if (activeQrProvider >= 1) {
+      qrImage.alt = 'QR 코드를 불러오지 못했습니다. 현재 주소 복사 버튼을 이용해 주세요.';
+      return;
+    }
+    activeQrProvider += 1;
+    qrImage.src = qrProviderUrl(activeQrProvider, publicUrl);
+  });
+
+  copyLinkBtn.addEventListener('click', async () => {
+    const originalText = '현재 주소 복사';
+    try {
+      await navigator.clipboard.writeText(publicUrl);
+      copyLinkBtn.textContent = '복사 완료';
+      window.setTimeout(() => {
+        copyLinkBtn.textContent = originalText;
+      }, 1500);
+    } catch (error) {
+      window.prompt('아래 주소를 복사하세요.', publicUrl);
+    }
+  });
+}
+
+function setupActiveGateNav() {
+  if (!navEl) return;
+
+  const links = new Map(
+    [...navEl.querySelectorAll('[data-gate-link]')].map((link) => [link.dataset.gateLink, link])
+  );
+  const sections = [...document.querySelectorAll('[data-gate-section]')];
+  let lockedGateId = null;
+  let scrollEndTimer = null;
+  let fallbackUnlockTimer = null;
+  let programmaticScrollStarted = false;
+
+  // 탭 전체를 매번 가운데로 이동시키지 않고, 화면 밖으로 가려진 경우에만 최소한으로 노출합니다.
+  const revealLink = (link) => {
+    if (!link) return;
+    const navRect = navEl.getBoundingClientRect();
+    const linkRect = link.getBoundingClientRect();
+    const edgePadding = 8;
+    let delta = 0;
+
+    if (linkRect.left < navRect.left + edgePadding) {
+      delta = linkRect.left - navRect.left - edgePadding;
+    } else if (linkRect.right > navRect.right - edgePadding) {
+      delta = linkRect.right - navRect.right + edgePadding;
+    }
+
+    if (Math.abs(delta) > 1) {
+      navEl.scrollBy({
+        left: delta,
+        behavior: prefersReducedMotion ? 'auto' : 'smooth'
+      });
+    }
+  };
+
+  const setActive = (gateId, reveal = false) => {
+    links.forEach((link, id) => {
+      const isActive = id === gateId;
+      link.classList.toggle('active', isActive);
+      link.setAttribute('aria-current', isActive ? 'location' : 'false');
+    });
+
+    if (reveal) revealLink(links.get(gateId));
+  };
+
+  const releaseClickLock = () => {
+    if (!lockedGateId) return;
+    const gateId = lockedGateId;
+    lockedGateId = null;
+    programmaticScrollStarted = false;
+    window.clearTimeout(scrollEndTimer);
+    window.clearTimeout(fallbackUnlockTimer);
+    setActive(gateId, false);
+  };
+
+  navEl.addEventListener('click', (event) => {
+    const link = event.target.closest('[data-gate-link]');
+    if (!link) return;
+
+    const gateId = link.dataset.gateLink;
+    const target = document.getElementById(`gate-${gateId}`);
+    if (!target) return;
+
+    event.preventDefault();
+    lockedGateId = gateId;
+    programmaticScrollStarted = false;
+    setActive(gateId, true);
+
+    // 주소의 해시는 갱신하되, 브라우저의 기본 점프 동작은 막습니다.
+    if (history.replaceState) {
+      history.replaceState(null, '', `#gate-${gateId}`);
+    }
+
+    target.scrollIntoView({
+      behavior: prefersReducedMotion ? 'auto' : 'smooth',
+      block: 'start'
+    });
+
+    window.clearTimeout(fallbackUnlockTimer);
+    fallbackUnlockTimer = window.setTimeout(releaseClickLock, prefersReducedMotion ? 160 : 1800);
+  });
+
+  // 스크롤 도중에는 지나가는 다른 Gate가 선택 상태를 빼앗지 못하게 합니다.
+  window.addEventListener('scroll', () => {
+    if (!lockedGateId) return;
+    programmaticScrollStarted = true;
+    window.clearTimeout(scrollEndTimer);
+    scrollEndTimer = window.setTimeout(releaseClickLock, 180);
+  }, { passive: true });
+
+  if ('onscrollend' in window) {
+    window.addEventListener('scrollend', () => {
+      if (lockedGateId && programmaticScrollStarted) releaseClickLock();
+    }, { passive: true });
+  }
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      if (lockedGateId) {
+        setActive(lockedGateId, false);
+        return;
+      }
+
+      const visibleEntries = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+      if (visibleEntries[0]) {
+        setActive(visibleEntries[0].target.dataset.gateSection, false);
+      }
+    }, {
+      rootMargin: '-28% 0px -58% 0px',
+      threshold: [0, 0.05, 0.2]
+    });
+
+    sections.forEach((section) => observer.observe(section));
+  }
+}
+
+function setupEvents() {
+  rouletteGateEl?.addEventListener('change', (event) => {
+    if (isSpinning) return;
+    currentRotation = 0;
+    if (canvas) canvas.style.transform = 'rotate(0deg)';
+    drawWheel(gateById(event.target.value));
+    if (resultEl) {
+      resultEl.innerHTML = '<span>READY</span><strong>Gate를 선택하고 룰렛을 돌려주세요</strong><p>추천 장소와 이동시간·거리까지 바로 확인할 수 있어요.</p>';
+    }
+  });
+
+  spinBtn?.addEventListener('click', spinWheel);
+
+  window.addEventListener('resize', () => {
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(() => {
+      if (!isSpinning && rouletteGateEl?.value) {
+        drawWheel(gateById(rouletteGateEl.value));
+      }
+    }, 120);
+  });
+}
+
+function init() {
+  if (!Array.isArray(GATES) || !GATES.length) return;
+  renderNav();
+  renderGateList();
+  renderRouletteSelect();
+  drawWheel(gateById(rouletteGateEl?.value));
+  setupEvents();
+  setupSpaceModal();
+  setupQr();
+  setupActiveGateNav();
+}
+
+init();
+
+</script>
+</body>
+</html>
