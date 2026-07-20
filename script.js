@@ -1,166 +1,36 @@
-let currentRotation = 0;
-const navEl = document.getElementById('gateNav');
-const listEl = document.getElementById('gate-list');
-const rouletteGateEl = document.getElementById('rouletteGate');
-const canvas = document.getElementById('wheelCanvas');
-const ctx = canvas.getContext('2d');
-const spinBtn = document.getElementById('spinBtn');
-const resultEl = document.getElementById('rouletteResult');
-const qrImage = document.getElementById('qrImage');
-const copyLinkBtn = document.getElementById('copyLinkBtn');
-const wheelColors = ['#006c5a','#009178','#00a886','#dff9ef','#f4fffb'];
+# 하나로 PASS — 청라 HQ 모바일 가이드
 
-function gateById(id){
-  return GATES.find(g => g.id === id) || GATES[0];
-}
+하나금융그룹 제20기 SMART 홍보대사 활동용 정적 웹페이지입니다. 별도 빌드 과정 없이 HTML·CSS·JavaScript 파일만으로 실행됩니다.
 
-function escapeHtml(value){
-  return String(value ?? '').replace(/[&<>'"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[s]));
-}
+## 최종 반영 내용
 
-function renderNav(){
-  navEl.innerHTML = GATES.map(g => `<a href="#gate-${g.id}">${g.icon} ${escapeHtml(g.label)}</a>`).join('');
-}
+- 메인 타이틀을 `청라 라이프 가이드 미션`에서 `하나로 PASS`로 변경
+- `본부 공항` 명칭을 모두 `청라 HQ`로 변경
+- 청라 HQ 외관 및 내부 공간 콘셉트 이미지 7종 추가
+- 기존 Coming Soon 영역을 청라 HQ 공간 미리보기 카드 6개로 교체
+- 공간 카드의 `공간 자세히 보기` 버튼과 이미지 모달 기능 추가
+- 런치·미팅·애프터·하나로컬 Gate 룰렛 정상 작동 및 중복 클릭 방지
+- 모바일 터치 영역, 포커스 표시, 반응형 배치 및 가로 넘침 개선
+- Gate 바로가기 활성 상태 표시 및 현재 섹션 연동
+- QR 코드 2개 공급처 자동 대체 및 현재 주소 복사 기능 추가
+- 배치 자료의 상세 도면은 외부 페이지에 포함하지 않고 공간 콘셉트만 반영
 
-function renderPlaceCard(place){
-  if(place.coming){
-    return `
-      <article class="place-card placeholder">
-        <div class="placeholder-icon">${escapeHtml(place.travelIcon)}</div>
-        <h3>${escapeHtml(place.name)}</h3>
-        <p class="mood">${escapeHtml(place.mood)}</p>
-        <span class="coming-pill">coming soon</span>
-      </article>
-    `;
-  }
-  return `
-    <article class="place-card">
-      <span class="type">${escapeHtml(place.type)}</span>
-      <h3>${escapeHtml(place.name)}</h3>
-      <p class="mood">${escapeHtml(place.mood)}</p>
-      <p class="desc">${escapeHtml(place.desc)}</p>
-      <div class="travel-chip"><span>${escapeHtml(place.travelIcon)}</span><strong>${escapeHtml(place.travel)}</strong></div>
-      <a class="map-link" href="${place.map}" target="_blank" rel="noopener">네이버지도</a>
-    </article>
-  `;
-}
+## 실행 방법
 
-function renderGateList(){
-  listEl.innerHTML = GATES.map(g => `
-    <section class="gate-block" id="gate-${g.id}" data-tone="${escapeHtml(g.tone)}">
-      <header class="gate-head">
-        <div class="gate-title"><span>${g.icon}</span><span>${escapeHtml(g.title)}</span></div>
-        <div class="gate-subtitle">${escapeHtml(g.subtitle)}</div>
-      </header>
-      <p class="gate-intro">${escapeHtml(g.intro)}</p>
-      <div class="place-grid">
-        ${g.places.map(renderPlaceCard).join('')}
-      </div>
-    </section>
-  `).join('');
-}
+`index.html`을 더블클릭하거나, 폴더에서 아래 명령을 실행한 뒤 브라우저로 접속합니다.
 
-function renderRouletteSelect(){
-  const playable = GATES.filter(g => !g.places.every(p => p.coming));
-  rouletteGateEl.innerHTML = playable.map(g => `<option value="${g.id}">${g.icon} ${escapeHtml(g.label)}</option>`).join('');
-  rouletteGateEl.value = playable[0]?.id || 'lunch';
-}
+```bash
+python -m http.server 8000
+```
 
-function drawWheel(gate){
-  const dpr = window.devicePixelRatio || 1;
-  const size = 420;
-  canvas.width = size * dpr;
-  canvas.height = size * dpr;
-  canvas.style.width = `${size}px`;
-  canvas.style.maxWidth = '100%';
-  ctx.setTransform(dpr,0,0,dpr,0,0);
-  ctx.clearRect(0,0,size,size);
+접속 주소: `http://localhost:8000`
 
-  const places = gate.places.filter(p => !p.coming);
-  const cx = size / 2;
-  const cy = size / 2;
-  const radius = size / 2 - 14;
-  const slice = Math.PI * 2 / places.length;
+## GitHub Pages 배포
 
-  places.forEach((p, i) => {
-    ctx.beginPath();
-    ctx.moveTo(cx, cy);
-    ctx.arc(cx, cy, radius, i * slice, (i + 1) * slice);
-    ctx.closePath();
-    ctx.fillStyle = wheelColors[i % wheelColors.length];
-    ctx.fill();
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = 'rgba(255,255,255,.9)';
-    ctx.stroke();
+이 폴더 안의 파일과 `assets` 폴더를 저장소 최상단에 그대로 업로드합니다. GitHub Pages의 배포 주소가 아래 기본값과 다르면 `script.js` 상단의 `DEFAULT_DEPLOY_URL`만 실제 주소로 변경합니다.
 
-    ctx.save();
-    ctx.translate(cx, cy);
-    ctx.rotate(i * slice + slice / 2);
-    ctx.textAlign = 'right';
-    ctx.fillStyle = i >= 3 ? '#00463c' : '#ffffff';
-    ctx.font = '900 18px system-ui, sans-serif';
-    const label = p.name.length > 8 ? `${p.name.slice(0, 8)}…` : p.name;
-    ctx.fillText(label, radius - 24, 6);
-    ctx.restore();
-  });
+```js
+const DEFAULT_DEPLOY_URL = 'https://rich-hyun.github.io/cheongna-life-guide/';
+```
 
-  ctx.beginPath();
-  ctx.arc(cx, cy, 58, 0, Math.PI * 2);
-  ctx.fillStyle = '#00463c';
-  ctx.fill();
-  ctx.lineWidth = 7;
-  ctx.strokeStyle = '#ffffff';
-  ctx.stroke();
-  ctx.fillStyle = '#ffffff';
-  ctx.textAlign = 'center';
-  ctx.font = '1000 23px system-ui, sans-serif';
-  ctx.fillText('시작', cx, cy + 8);
-}
-
-function spinWheel(){
-  const gate = gateById(rouletteGateEl.value);
-  const places = gate.places.filter(p => !p.coming);
-  const picked = Math.floor(Math.random() * places.length);
-  const sliceDeg = 360 / places.length;
-  const targetDeg = 270 - (picked * sliceDeg + sliceDeg / 2);
-  const extra = 360 * (5 + Math.floor(Math.random() * 3));
-  currentRotation += extra + targetDeg - (currentRotation % 360);
-  canvas.style.transform = `rotate(${currentRotation}deg)`;
-  spinBtn.disabled = true;
-  resultEl.innerHTML = `<span>SPINNING</span><strong>오늘의 장소를 고르는 중...</strong><p>Gate와 이동 정보를 함께 확인해요.</p>`;
-
-  window.setTimeout(() => {
-    const p = places[picked];
-    resultEl.innerHTML = `
-      <span>${escapeHtml(gate.label)}</span>
-      <strong>${escapeHtml(p.name)}</strong>
-      <p>${escapeHtml(p.travelIcon)} ${escapeHtml(p.travel)} · ${escapeHtml(p.mood)}</p>
-      <a class="map-link" href="${p.map}" target="_blank" rel="noopener">네이버지도에서 길 확인</a>
-    `;
-    spinBtn.disabled = false;
-  }, 4300);
-}
-
-function setupQr(){
-  const url = window.location.href.split('#')[0];
-  qrImage.src = `https://quickchart.io/qr?size=300&margin=1&text=${encodeURIComponent(url)}`;
-  copyLinkBtn.addEventListener('click', async () => {
-    try{
-      await navigator.clipboard.writeText(url);
-      copyLinkBtn.textContent = '복사 완료';
-      setTimeout(() => copyLinkBtn.textContent = '현재 주소 복사', 1500);
-    }catch(err){
-      window.prompt('주소를 복사하세요', url);
-    }
-  });
-}
-
-rouletteGateEl.addEventListener('change', e => drawWheel(gateById(e.target.value)));
-spinBtn.addEventListener('click', spinWheel);
-window.addEventListener('resize', () => drawWheel(gateById(rouletteGateEl.value)));
-
-renderNav();
-renderGateList();
-renderRouletteSelect();
-drawWheel(gateById(rouletteGateEl.value));
-setupQr();
+정상 배포 후 `index.html`, `style.css`, `data.js`, `script.js`, 이미지 파일과 `assets` 폴더가 모두 같은 저장소에 있어야 합니다.

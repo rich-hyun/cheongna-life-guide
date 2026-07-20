@@ -1,95 +1,264 @@
-<!doctype html>
-<html lang="ko">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>청라 라이프 가이드 미션</title>
-  <meta name="description" content="하나금융그룹 청라 HQ와 주변 런치, 미팅, 애프터, 하나로컬 Gate를 소개하는 모바일 중심 웹페이지">
-  <meta property="og:title" content="청라 라이프 가이드 미션">
-  <meta property="og:description" content="본부 공항부터 런치 Gate, 미팅 Gate, 애프터 Gate, 하나로컬 Gate까지">
-  <meta property="og:type" content="website">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="page-bg" aria-hidden="true"></div>
-  <header class="topbar">
-    <a class="brand" href="#top" aria-label="청라 라이프 가이드 홈">
-      <img src="logo_horizontal_white.png" alt="하나금융그룹">
-    </a>
-    <span class="ambassador-badge">제20기 하나금융그룹 SMART 홍보대사</span>
-  </header>
-
-  <main id="top">
-    <section class="hero shell">
-      <div class="hero-ticket">
-        <div class="ticket-copy">
-          <p class="eyebrow light">WELCOME TO 청라,<br>TOGETHER WITH 하나</p>
-          <h1>청라 라이프<br>가이드 미션</h1>
-          <p class="hero-desc">청라 HQ를 중심으로 본부와 4개의 Gate를 탐색하는 모바일 가이드</p>
-        </div>
-        <div class="flight-line" aria-hidden="true">✈︎</div>
-        <img class="hero-character" src="char_duo_1.png" alt="하나 캐릭터">
-        <div class="barcode" aria-hidden="true"></div>
-      </div>
-      <div class="hero-actions">
-        <a class="primary-btn" href="#gate-list"><span>🎟️</span> 탑승권 확인하기</a>
-        <a class="outline-btn" href="#roulette"><span>⚙️</span> 룰렛 돌리기</a>
-      </div>
-    </section>
-
-    <section id="roulette" class="roulette-area shell">
-      <div class="roulette-card">
-        <div class="roulette-copy">
-          <p class="section-kicker">오늘의 추천 장소 뽑기!</p>
-          <h2>Gate 선택 후 오늘의 추천 장소를 뽑아보세요.</h2>
-          <p class="hand-note">어디로 갈지 고민될 땐<br>룰렛을 돌려보세요!</p>
-          <div class="roulette-control">
-            <label for="rouletteGate">탑승 Gate</label>
-            <select id="rouletteGate"></select>
-            <button id="spinBtn" class="primary-btn" type="button">시작</button>
-          </div>
-        </div>
-        <div class="wheel-wrap">
-          <div class="wheel-pointer" aria-hidden="true"></div>
-          <canvas id="wheelCanvas" width="420" height="420" aria-label="장소 추천 룰렛"></canvas>
-        </div>
-        <div id="rouletteResult" class="roulette-result" aria-live="polite">
-          <span>READY</span>
-          <strong>Gate를 선택하고 룰렛을 돌려주세요</strong>
-          <p>추천 장소와 이동시간·거리까지 바로 확인할 수 있어요.</p>
-        </div>
-      </div>
-    </section>
-
-    <nav class="gate-nav shell" id="gateNav" aria-label="게이트 바로가기"></nav>
-
-    <section id="gate-list" class="gate-list shell" aria-label="청라 추천 장소 목록"></section>
-
-    <section id="qr" class="qr-section shell">
-      <div class="qr-card">
-        <div>
-          <p class="section-kicker">QR Landing</p>
-          <h2>하나路 PASS로 바로 접속</h2>
-          <p>현장 리플렛이나 안내판에 연결할 수 있도록 현재 배포 주소 기준 QR을 자동 생성합니다.</p>
-          <button class="outline-btn compact" id="copyLinkBtn" type="button">현재 주소 복사</button>
-        </div>
-        <div class="qr-box">
-          <img id="qrImage" alt="현재 페이지 접속 QR 코드">
-          <span>SCAN TO BOARD</span>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <img src="char_duo_2.png" alt="하나 캐릭터">
-    <div>
-      <strong>청라에서의 하루, 하나와 함께 더 특별하게!</strong>
-      <span>즐거운 미션 수행 되세요! 💚</span>
-    </div>
-  </footer>
-
-  <script src="data.js"></script>
-  <script src="script.js"></script>
-</body>
-</html>
+const GATES = [
+  {
+    id: 'hq',
+    label: '청라 HQ',
+    title: '청라 HQ',
+    subtitle: '공간 콘셉트 미리보기',
+    tag: 'CHEONGNA HQ',
+    icon: '🏢',
+    tone: 'emerald',
+    roulette: false,
+    heroImage: 'assets/hq-exterior.webp',
+    heroAlt: '하나금융그룹 청라 HQ 외관 콘셉트 이미지',
+    intro: '하나금융그룹 청라 HQ의 외관과 공용 공간 콘셉트를 한눈에 살펴보세요. 세부 운영 및 출입 가능 범위는 실제 안내에 따라 달라질 수 있습니다.',
+    highlights: ['북카페·라운지', '미팅·협업 공간', '스마트워크 공간', '웰니스·휴게 공간'],
+    places: [
+      {
+        name: '중앙 아트리움',
+        type: '공용 공간',
+        mood: '층과 층을 잇는 개방형 동선',
+        desc: '곡선형 보이드와 연결 브리지가 청라 HQ의 여러 공간을 자연스럽게 이어주는 중심 공간입니다.',
+        image: 'assets/hq-atrium.webp',
+        imageAlt: '곡선형 브리지와 여러 층이 연결된 중앙 아트리움 콘셉트 이미지',
+        internal: true
+      },
+      {
+        name: '웰컴 로비',
+        type: '방문·안내',
+        mood: '첫 방문을 맞이하는 열린 로비',
+        desc: '넓은 개방감과 따뜻한 소재를 활용해 방문객의 체크인과 만남을 지원하는 공간입니다.',
+        image: 'assets/hq-grand-lobby.webp',
+        imageAlt: '넓은 개방감과 목재 마감이 돋보이는 그랜드 로비 콘셉트 이미지',
+        internal: true
+      },
+      {
+        name: '북카페·라운지',
+        type: '독서·휴식',
+        mood: '책과 커피를 함께 즐기는 휴게 공간',
+        desc: '북카페와 라운지형 좌석을 중심으로 독서, 짧은 휴식, 캐주얼한 대화를 지원합니다.',
+        image: 'assets/hq-lounge.webp',
+        imageAlt: '창가 부스와 바 테이블이 있는 라운지형 휴게공간 콘셉트 이미지',
+        internal: true
+      },
+      {
+        name: '미팅·협업 공간',
+        type: '미팅·협업',
+        mood: '아이디어를 나누는 열린 공간',
+        desc: '소규모 테이블과 오픈 좌석을 중심으로 짧은 회의와 협업을 유연하게 진행할 수 있습니다.',
+        image: 'assets/hq-collaboration.webp',
+        imageAlt: '오픈 테이블과 협업 좌석이 배치된 업무 라운지 콘셉트 이미지',
+        internal: true
+      },
+      {
+        name: '스마트워크 라운지',
+        type: '스마트워크',
+        mood: '집중과 리프레시가 공존하는 워크존',
+        desc: '풍부한 식재와 다양한 좌석을 활용해 집중 업무, 유연 근무, 짧은 리프레시를 지원하는 공간입니다.',
+        image: 'assets/hq-green-work.webp',
+        imageAlt: '식재와 다양한 좌석이 조화를 이룬 그린 워크 라운지 콘셉트 이미지',
+        internal: true
+      },
+      {
+        name: '루프가든',
+        type: '야외 공용공간',
+        mood: '도심 속에서 숨을 고르는 정원',
+        desc: '건물 상부의 녹지와 순환 동선을 활용해 산책과 교류를 즐길 수 있는 열린 공간입니다.',
+        image: 'assets/hq-rooftop.webp',
+        imageAlt: '잔디와 산책 동선이 조성된 루프가든 콘셉트 이미지',
+        internal: true
+      }
+    ]
+  },
+  {
+    id: 'lunch',
+    label: '런치 Gate',
+    title: '런치 Gate',
+    subtitle: '든든한 점심 추천',
+    tag: 'LUNCH',
+    icon: '🍽️',
+    tone: 'mint',
+    intro: '점심시간에 빠르게 다녀오기 좋은 청라 HQ 주변 식당 코스입니다.',
+    places: [
+      {
+        name: '삼대청국장 청라본점',
+        type: '한식',
+        mood: '든든한 한식',
+        desc: '속 편하게 먹기 좋은 한식 점심 코스입니다.',
+        travel: '차로 약 9분 · 3.8km',
+        travelIcon: '🚗',
+        map: 'https://map.naver.com/p/search/%EC%82%BC%EB%8C%80%EC%B2%AD%EA%B5%AD%EC%9E%A5%20%EC%B2%AD%EB%9D%BC%EB%B3%B8%EC%A0%90'
+      },
+      {
+        name: '두진옥 수제순두부',
+        type: '순두부',
+        mood: '부담 없는 점심',
+        desc: '가볍지만 든든하게 먹기 좋은 순두부 코스입니다.',
+        travel: '차로 약 10분 · 4.1km',
+        travelIcon: '🚗',
+        map: 'https://map.naver.com/p/search/%EB%91%90%EC%A7%84%EC%98%A5%20%EC%88%98%EC%A0%9C%EC%88%9C%EB%91%90%EB%B6%80'
+      },
+      {
+        name: '은옥 청라본점',
+        type: '돈까스',
+        mood: '정갈한 돈까스',
+        desc: '깔끔한 메뉴 구성이 필요한 점심에 어울립니다.',
+        travel: '차로 약 11분 · 4.6km',
+        travelIcon: '🚗',
+        map: 'https://map.naver.com/p/search/%EC%9D%80%EC%98%A5%20%EC%B2%AD%EB%9D%BC%EB%B3%B8%EC%A0%90'
+      },
+      {
+        name: '해밀루',
+        type: '식당',
+        mood: '점심 회식에도 좋은 곳',
+        desc: '여럿이 가도 무난한 점심·식사 후보입니다.',
+        travel: '차로 약 8분 · 3.4km',
+        travelIcon: '🚗',
+        map: 'https://map.naver.com/p/search/%ED%95%B4%EB%B0%80%EB%A3%A8%20%EC%B2%AD%EB%9D%BC'
+      }
+    ]
+  },
+  {
+    id: 'meeting',
+    label: '미팅 Gate',
+    title: '미팅 Gate',
+    subtitle: '편안한 미팅 장소',
+    tag: 'MEETING',
+    icon: '☕',
+    tone: 'aqua',
+    intro: '외부 미팅, 짧은 회의, 아이디어 정리에 어울리는 카페형 게이트입니다.',
+    places: [
+      {
+        name: 'COSMO 40',
+        type: '대형 카페',
+        mood: '공간감 좋은 대형 카페',
+        desc: '넓은 공간과 분위기가 필요한 미팅에 어울립니다.',
+        travel: '차로 약 8분 · 3.5km',
+        travelIcon: '🚗',
+        map: 'https://map.naver.com/p/search/COSMO%2040'
+      },
+      {
+        name: 'Cafe Rari 청라점',
+        type: '카페',
+        mood: '가벼운 미팅용 카페',
+        desc: '짧은 대화나 커피 미팅에 적합한 후보입니다.',
+        travel: '차로 약 10분 · 4.2km',
+        travelIcon: '🚗',
+        map: 'https://map.naver.com/p/search/Cafe%20Rari%20%EC%B2%AD%EB%9D%BC%EC%A0%90'
+      },
+      {
+        name: '6층 커피집',
+        type: '카페',
+        mood: '조용한 좌석',
+        desc: '차분하게 앉아 이야기하기 좋은 카페 코스입니다.',
+        travel: '차로 약 12분 · 4.9km',
+        travelIcon: '🚗',
+        map: 'https://map.naver.com/p/search/6%EC%B8%B5%20%EC%BB%A4%ED%94%BC%EC%A7%91%20%EC%B2%AD%EB%9D%BC'
+      },
+      {
+        name: '카페 개제',
+        type: '카페',
+        mood: '감성 있는 티타임',
+        desc: '분위기 있는 대화와 티타임에 어울리는 카페입니다.',
+        travel: '차로 약 14분 · 5.6km',
+        travelIcon: '🚗',
+        map: 'https://map.naver.com/p/search/%EC%B9%B4%ED%8E%98%20%EA%B0%9C%EC%A0%9C%20%EC%B2%AD%EB%9D%BC'
+      }
+    ]
+  },
+  {
+    id: 'after',
+    label: '애프터 Gate',
+    title: '애프터 Gate',
+    subtitle: '퇴근 후 힐링 & 저녁',
+    tag: 'AFTER',
+    icon: '🥂',
+    tone: 'blue',
+    intro: '퇴근 후 저녁, 산책, 야간 카페 무드까지 하루를 마무리하는 코스입니다.',
+    places: [
+      {
+        name: '쇼미더크랩 청라점',
+        type: '해산물',
+        mood: '퇴근 후 특별한 저녁',
+        desc: '조금 특별한 저녁 모임이 필요할 때 추천하는 코스입니다.',
+        travel: '차로 약 12분 · 5.0km',
+        travelIcon: '🚗',
+        map: 'https://map.naver.com/p/search/%EC%87%BC%EB%AF%B8%EB%8D%94%ED%81%AC%EB%9E%A9%20%EC%B2%AD%EB%9D%BC%EC%A0%90'
+      },
+      {
+        name: 'Taco Dot',
+        type: '멕시칸',
+        mood: '캐주얼한 저녁 모임',
+        desc: '퇴근 후 가볍게 분위기를 바꾸기 좋은 저녁 후보입니다.',
+        travel: '차로 약 15분 · 6.1km',
+        travelIcon: '🚗',
+        map: 'https://map.naver.com/p/search/Taco%20Dot%20%EC%B2%AD%EB%9D%BC'
+      },
+      {
+        name: '카페다이브',
+        type: '야간 카페',
+        mood: '야간 카페 무드',
+        desc: '식사 후 대화하거나 가볍게 쉬기 좋은 카페 코스입니다.',
+        travel: '차로 약 13분 · 5.4km',
+        travelIcon: '🚗',
+        map: 'https://map.naver.com/p/search/%EC%B9%B4%ED%8E%98%EB%8B%A4%EC%9D%B4%EB%B8%8C%20%EC%B2%AD%EB%9D%BC'
+      },
+      {
+        name: '청라호수공원',
+        type: '공원',
+        mood: '가볍게 산책하는 코스',
+        desc: '퇴근 후 머리 식히며 걷기 좋은 청라 대표 산책지입니다.',
+        travel: '도보 약 18분 · 1.4km',
+        travelIcon: '🚶',
+        map: 'https://map.naver.com/p/search/%EC%B2%AD%EB%9D%BC%ED%98%B8%EC%88%98%EA%B3%B5%EC%9B%90'
+      }
+    ]
+  },
+  {
+    id: 'local',
+    label: '하나로컬 Gate',
+    title: '하나로컬 Gate',
+    subtitle: '청라의 명소 & 핫플',
+    tag: 'LOCAL',
+    icon: '📍',
+    tone: 'lime',
+    intro: '청라에 처음 오는 사람에게 소개하기 좋은 지역 공간과 주말 코스입니다.',
+    places: [
+      {
+        name: '정서진',
+        type: '일몰 명소',
+        mood: '석양 명소',
+        desc: '서해 노을을 보기 좋은 인천 서구 대표 로컬 명소입니다.',
+        travel: '차로 약 18분 · 10.5km',
+        travelIcon: '🚗',
+        map: 'https://map.naver.com/p/search/%EC%A0%95%EC%84%9C%EC%A7%84'
+      },
+      {
+        name: '청라 커낼웨이',
+        type: '수변 산책',
+        mood: '청라를 느끼는 산책 코스',
+        desc: '청라 중심 생활권 분위기를 느낄 수 있는 수변 산책 코스입니다.',
+        travel: '도보 약 16분 · 1.2km',
+        travelIcon: '🚶',
+        map: 'https://map.naver.com/p/search/%EC%B2%AD%EB%9D%BC%20%EC%BB%A4%EB%82%BC%EC%9B%A8%EC%9D%B4'
+      },
+      {
+        name: '아라타워 전망대',
+        type: '전망대',
+        mood: '탁 트인 전망',
+        desc: '정서진과 아라뱃길을 함께 둘러보기 좋은 전망 코스입니다.',
+        travel: '차로 약 20분 · 11.8km',
+        travelIcon: '🚗',
+        map: 'https://map.naver.com/p/search/%EC%95%84%EB%9D%BC%ED%83%80%EC%9B%8C%20%EC%A0%84%EB%A7%9D%EB%8C%80'
+      },
+      {
+        name: '국립생물자원관',
+        type: '전시·문화',
+        mood: '주말 가볍게 둘러보기',
+        desc: '생태 전시와 교육 콘텐츠를 볼 수 있는 지역 문화 공간입니다.',
+        travel: '차로 약 12분 · 5.0km',
+        travelIcon: '🚗',
+        map: 'https://map.naver.com/p/search/%EA%B5%AD%EB%A6%BD%EC%83%9D%EB%AC%BC%EC%9E%90%EC%9B%90%EA%B4%80'
+      }
+    ]
+  }
+];

@@ -1,37 +1,417 @@
-:root{
-  --hana:#009178;
-  --hana-dark:#006c5a;
-  --hana-deep:#00463c;
-  --hana-deeper:#00342d;
-  --mint:#e7fff6;
-  --mint-2:#f3fffb;
-  --card:#ffffff;
-  --ink:#11342f;
-  --sub:#52736d;
-  --line:rgba(0,145,120,.16);
-  --shadow:0 18px 52px rgba(0,70,60,.14);
-  --font:'Hana2','Hana2.0','Pretendard','Noto Sans KR','Apple SD Gothic Neo',system-ui,-apple-system,sans-serif;
+'use strict';
+
+let currentRotation = 0;
+let isSpinning = false;
+let activeQrProvider = 0;
+let lastFocusedElement = null;
+let resizeTimer = null;
+
+const DEFAULT_DEPLOY_URL = 'https://rich-hyun.github.io/cheongna-life-guide/';
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const wheelColors = ['#006c5a', '#009178', '#00a886', '#dff9ef', '#f4fffb', '#bdebdc'];
+
+const navEl = document.getElementById('gateNav');
+const listEl = document.getElementById('gate-list');
+const rouletteGateEl = document.getElementById('rouletteGate');
+const canvas = document.getElementById('wheelCanvas');
+const ctx = canvas?.getContext('2d');
+const spinBtn = document.getElementById('spinBtn');
+const resultEl = document.getElementById('rouletteResult');
+const qrImage = document.getElementById('qrImage');
+const copyLinkBtn = document.getElementById('copyLinkBtn');
+const spaceModal = document.getElementById('spaceModal');
+const modalCloseBtn = document.getElementById('modalCloseBtn');
+const modalImage = document.getElementById('modalImage');
+const modalType = document.getElementById('modalType');
+const modalTitle = document.getElementById('modalTitle');
+const modalMood = document.getElementById('modalMood');
+const modalDesc = document.getElementById('modalDesc');
+
+function gateById(id) {
+  return GATES.find((gate) => gate.id === id) || GATES[0];
 }
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;font-family:var(--font);color:var(--ink);background:#ecfff8;word-break:keep-all;overflow-x:hidden}
-a{color:inherit;text-decoration:none}
-button,select{font:inherit}
-.page-bg{position:fixed;inset:0;z-index:-2;background:linear-gradient(180deg,#004c41 0,#007c68 84px,#eafff7 84px,#f7fffc 100%)}
-.page-bg::before{content:"";position:absolute;inset:84px 0 auto;height:330px;background:radial-gradient(circle at 82% 8%,rgba(255,255,255,.46),transparent 18%),linear-gradient(90deg,rgba(255,255,255,.12) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.12) 1px,transparent 1px),linear-gradient(150deg,#00a886 0%,#00a886 62%,#eafff7 62%,#eafff7 100%);background-size:auto,44px 44px,44px 44px,auto;opacity:.9}
-.shell{width:min(1120px,calc(100% - 28px));margin:0 auto}
-.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px max(14px,calc((100vw - 1120px)/2));background:linear-gradient(90deg,#004b41,#007b68);border-bottom:1px solid rgba(255,255,255,.16)}
-.brand img{display:block;height:34px;width:auto}.ambassador-badge{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;background:#fff;color:var(--hana-dark);padding:10px 18px;font-size:15px;font-weight:1000;box-shadow:0 10px 20px rgba(0,40,34,.14);white-space:nowrap}
-.hero{padding:34px 0 16px}.hero-ticket{position:relative;min-height:460px;border-radius:28px;background:linear-gradient(135deg,#006c5a 0%,#008f76 74%,#006551 100%);box-shadow:var(--shadow);overflow:hidden;padding:42px 34px;color:#fff;border:1px solid rgba(255,255,255,.22)}
-.hero-ticket::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 94% 10%,rgba(255,255,255,.18),transparent 20%),linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:auto,38px 38px,38px 38px;opacity:.72}
-.hero-ticket::after{content:"";position:absolute;top:0;right:-2px;width:78px;height:100%;background:linear-gradient(180deg,#015247,#007e6a);border-left:2px dashed rgba(255,255,255,.32)}
-.ticket-copy{position:relative;z-index:2;max-width:590px}.eyebrow{margin:0 0 14px;font-weight:1000;letter-spacing:.01em}.eyebrow.light{color:#d8fff1;font-size:18px;line-height:1.42}.hero h1{margin:0;color:#fff;font-size:clamp(48px,8vw,78px);line-height:.98;letter-spacing:-.065em;text-shadow:0 5px 18px rgba(0,35,30,.22)}.hero-desc{margin:24px 0 0;max-width:520px;color:#f0fff9;font-size:20px;line-height:1.6;font-weight:800}.flight-line{position:absolute;z-index:2;right:220px;top:58px;color:#fff;font-size:32px;transform:rotate(8deg);opacity:.95}.hero-character{position:absolute;z-index:3;right:76px;bottom:24px;width:min(43%,360px);filter:drop-shadow(0 18px 18px rgba(0,45,38,.2))}.barcode{position:absolute;z-index:3;right:24px;top:105px;width:26px;height:180px;background:repeating-linear-gradient(90deg,#dffcf3 0 2px,transparent 2px 5px);opacity:.9;border-radius:4px}
-.hero-actions{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:22px 0 0}.primary-btn,.outline-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:999px;min-height:58px;padding:14px 20px;font-weight:1000;cursor:pointer;transition:.18s ease}.primary-btn{background:var(--hana-deeper);color:#fff;box-shadow:0 16px 32px rgba(0,55,48,.2)}.outline-btn{background:#fff;color:var(--hana-deep);border:2px solid var(--hana-dark)}.primary-btn:hover,.outline-btn:hover{transform:translateY(-1px)}.compact{min-height:46px;padding:10px 16px;border-width:1px}
-.roulette-area{padding:20px 0 18px}.roulette-card{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px;align-items:center;border-radius:26px;background:rgba(255,255,255,.96);border:1px solid rgba(255,255,255,.9);box-shadow:var(--shadow);padding:22px;overflow:hidden}.roulette-copy h2{margin:8px 0 14px;font-size:20px;line-height:1.42;color:#183f39;letter-spacing:-.03em}.section-kicker{margin:0;color:var(--hana-dark);font-size:24px;font-weight:1000;letter-spacing:-.04em}.hand-note{display:inline-block;margin:8px 0 16px;color:var(--hana);font-weight:900;line-height:1.6;transform:rotate(-2deg)}.roulette-control{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end;max-width:520px}.roulette-control label{grid-column:1/-1;color:var(--hana-deep);font-size:13px;font-weight:1000}.roulette-control select{height:48px;border:1px solid var(--line);border-radius:16px;background:#fff;color:var(--hana-deep);padding:0 12px;font-weight:900}.roulette-control .primary-btn{min-height:48px;padding:0 22px}.wheel-wrap{position:relative;display:grid;place-items:center}.wheel-pointer{position:absolute;top:0;z-index:3;width:26px;height:34px;background:#0a8f78;clip-path:polygon(50% 100%,0 0,100% 0);filter:drop-shadow(0 4px 6px rgba(0,0,0,.18))}#wheelCanvas{width:100%;max-width:330px;height:auto;border-radius:50%;background:#f5fffb;box-shadow:0 14px 36px rgba(0,70,60,.18);transition:transform 4.2s cubic-bezier(.12,.72,.08,1)}.roulette-result{grid-column:1/-1;border-radius:22px;background:linear-gradient(90deg,#f1fff9,#fff);border:1px solid var(--line);padding:16px 18px;min-height:92px}.roulette-result span{display:inline-flex;border-radius:999px;background:var(--hana);color:#fff;padding:5px 10px;font-size:12px;font-weight:1000}.roulette-result strong{display:block;margin-top:8px;color:var(--hana-deep);font-size:21px;letter-spacing:-.03em}.roulette-result p{margin:6px 0 0;color:var(--sub);line-height:1.55;font-size:15px}.roulette-result .map-link{margin-top:10px;width:auto;padding:10px 14px}
-.gate-nav{position:sticky;top:63px;z-index:15;display:flex;gap:8px;overflow-x:auto;padding:14px 0 12px;scrollbar-width:none}.gate-nav::-webkit-scrollbar{display:none}.gate-nav a{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;border-radius:16px;background:#fff;color:var(--hana-deep);padding:12px 14px;border:1px solid var(--line);font-size:14px;font-weight:1000;box-shadow:0 8px 18px rgba(0,70,60,.08)}.gate-nav a:first-child{background:var(--hana-deep);color:#fff}
-.gate-list{display:grid;gap:18px;padding:0 0 44px}.gate-block{border-radius:26px;background:rgba(255,255,255,.96);box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.9);overflow:hidden;scroll-margin-top:130px}.gate-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px 18px;color:#fff;background:linear-gradient(90deg,var(--hana-dark),var(--hana))}.gate-block[data-tone="aqua"] .gate-head{background:linear-gradient(90deg,#007b8f,#00a0a8)}.gate-block[data-tone="blue"] .gate-head{background:linear-gradient(90deg,#1b689c,#1487b5)}.gate-block[data-tone="lime"] .gate-head{background:linear-gradient(90deg,#568d31,#72a849)}.gate-title{display:flex;align-items:center;gap:9px;font-size:24px;font-weight:1000;letter-spacing:-.04em}.gate-subtitle{font-weight:900;opacity:.95}.gate-intro{margin:0;padding:14px 18px 0;color:var(--sub);font-size:15px;line-height:1.58}.place-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:14px 16px 18px}.place-card{display:flex;flex-direction:column;gap:8px;min-height:210px;border-radius:18px;background:#fff;border:1px solid var(--line);box-shadow:0 10px 22px rgba(0,70,60,.06);padding:14px;overflow:hidden}.place-card.placeholder{align-items:center;justify-content:center;text-align:center;background:linear-gradient(180deg,#fff,#fafafa)}.place-card h3{margin:0;color:#083c35;font-size:18px;line-height:1.24;letter-spacing:-.04em}.place-card .type{display:inline-flex;align-self:flex-start;border-radius:999px;background:#effff8;color:var(--hana-dark);padding:5px 8px;font-size:12px;font-weight:1000}.place-card .mood{margin:0;color:#153e38;font-size:14px;font-weight:900;line-height:1.35}.place-card .desc{margin:0;color:var(--sub);font-size:13px;line-height:1.45}.travel-chip{display:flex;align-items:center;gap:6px;margin-top:auto;border-radius:13px;background:#eefcf7;border:1px solid rgba(0,145,120,.14);color:#064d43;padding:9px 10px;font-size:13px;font-weight:1000;line-height:1.25}.map-link{display:inline-flex;align-items:center;justify-content:center;gap:5px;width:100%;border-radius:13px;background:#fff;color:var(--hana-dark);border:1px solid var(--hana);padding:9px 10px;font-size:13px;font-weight:1000}.map-link:not(.disabled)::before{content:'📍'}.map-link.disabled{background:#e4e8e7;color:#879492;border-color:#d8dedc;pointer-events:none}.placeholder-icon{font-size:34px;opacity:.35}.coming-pill{display:inline-flex;border-radius:999px;background:#cfd6d4;color:#fff;padding:6px 14px;font-size:12px;font-weight:1000}
-.qr-section{padding:8px 0 54px}.qr-card{display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:18px;align-items:center;border-radius:26px;background:#fff;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.9);padding:22px}.qr-card h2{margin:6px 0 10px;color:var(--hana-deep);font-size:28px;letter-spacing:-.04em}.qr-card p:not(.section-kicker){margin:0 0 16px;color:var(--sub);line-height:1.6}.qr-box{justify-self:end;border-radius:22px;background:#f2fff9;border:1px solid var(--line);padding:14px;text-align:center}.qr-box img{display:block;width:150px;height:150px;background:#fff;border-radius:10px}.qr-box span{display:block;margin-top:10px;color:var(--hana-dark);font-size:11px;font-weight:1000;letter-spacing:.08em}
-footer{width:min(1120px,calc(100% - 28px));margin:0 auto 22px;display:flex;align-items:center;gap:14px;border-radius:26px;background:linear-gradient(90deg,#006551,#008f76);color:#fff;padding:18px 20px;box-shadow:var(--shadow)}footer img{width:88px;height:auto;align-self:flex-end}footer strong{display:block;font-size:18px;letter-spacing:-.03em}footer span{display:block;margin-top:4px;color:#e4fff6;font-weight:800}
-@media(max-width:900px){.roulette-card{grid-template-columns:1fr}.wheel-wrap{order:2}.roulette-result{order:3}.place-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-ticket{min-height:410px}.hero-character{right:54px;width:42%}.flight-line{right:48%;top:76px}.barcode{display:none}}
-@media(max-width:560px){.shell{width:min(100% - 24px,1120px)}.topbar{padding:12px}.brand img{height:31px}.ambassador-badge{font-size:12px;padding:8px 10px;max-width:52vw;white-space:normal;text-align:center;line-height:1.25}.hero{padding-top:24px}.hero-ticket{min-height:390px;border-radius:24px;padding:30px 24px 190px}.eyebrow.light{font-size:15px}.hero h1{font-size:48px;line-height:1.02}.hero-desc{font-size:16px;line-height:1.55;margin-top:18px}.hero-character{right:12px;bottom:10px;width:66%;max-width:245px}.flight-line{right:22px;top:114px;font-size:24px}.hero-actions{grid-template-columns:1fr;gap:10px}.primary-btn,.outline-btn{min-height:56px}.roulette-card{border-radius:24px;padding:18px}.section-kicker{font-size:21px}.roulette-copy h2{font-size:18px}.roulette-control{grid-template-columns:1fr}.roulette-control .primary-btn{width:100%}#wheelCanvas{max-width:285px}.gate-nav{top:56px;margin-left:-12px;margin-right:-12px;padding-left:12px;padding-right:12px}.gate-block{border-radius:24px}.gate-head{align-items:flex-start;padding:14px 15px}.gate-title{font-size:22px}.gate-subtitle{font-size:13px;text-align:right}.place-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:12px}.place-card{min-height:220px;border-radius:16px;padding:12px}.place-card h3{font-size:16px}.place-card .type{font-size:11px}.place-card .mood{font-size:13px}.place-card .desc{font-size:12px}.travel-chip{font-size:12px;padding:8px}.map-link{font-size:12px;padding:8px}.qr-card{grid-template-columns:1fr}.qr-box{justify-self:stretch;display:grid;place-items:center}.qr-box img{width:170px;height:170px}footer{align-items:center;padding:16px}footer img{width:74px}footer strong{font-size:16px}footer span{font-size:13px}}
-@media(max-width:370px){.hero h1{font-size:42px}.place-grid{grid-template-columns:1fr}.place-card{min-height:auto}.ambassador-badge{display:none}}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>'"]/g, (character) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  })[character]);
+}
+
+function safeLink(url) {
+  const value = String(url ?? '');
+  return /^https:\/\//i.test(value) ? value : '#';
+}
+
+function renderNav() {
+  if (!navEl) return;
+  navEl.innerHTML = GATES.map((gate, index) => `
+    <a href="#gate-${escapeHtml(gate.id)}" data-gate-link="${escapeHtml(gate.id)}" class="${index === 0 ? 'active' : ''}">
+      <span aria-hidden="true">${gate.icon}</span> ${escapeHtml(gate.label)}
+    </a>
+  `).join('');
+}
+
+function renderInternalPlaceCard(place, gateId, index) {
+  return `
+    <article class="place-card has-media">
+      <div class="card-media">
+        <img src="${escapeHtml(place.image)}" alt="${escapeHtml(place.imageAlt || place.name)}" loading="lazy" decoding="async">
+      </div>
+      <div class="card-content">
+        <span class="type">${escapeHtml(place.type)}</span>
+        <h3>${escapeHtml(place.name)}</h3>
+        <p class="mood">${escapeHtml(place.mood)}</p>
+        <p class="desc">${escapeHtml(place.desc)}</p>
+        <button class="detail-btn" type="button" data-space-gate="${escapeHtml(gateId)}" data-space-index="${index}" aria-label="${escapeHtml(place.name)} 상세 이미지 보기">공간 자세히 보기</button>
+      </div>
+    </article>
+  `;
+}
+
+function renderPlaceCard(place, gateId, index) {
+  if (place.internal && place.image) {
+    return renderInternalPlaceCard(place, gateId, index);
+  }
+
+  if (place.coming) {
+    return `
+      <article class="place-card placeholder">
+        <div class="placeholder-icon" aria-hidden="true">${escapeHtml(place.travelIcon)}</div>
+        <h3>${escapeHtml(place.name)}</h3>
+        <p class="mood">${escapeHtml(place.mood)}</p>
+        <span class="coming-pill">coming soon</span>
+      </article>
+    `;
+  }
+
+  return `
+    <article class="place-card">
+      <span class="type">${escapeHtml(place.type)}</span>
+      <h3>${escapeHtml(place.name)}</h3>
+      <p class="mood">${escapeHtml(place.mood)}</p>
+      <p class="desc">${escapeHtml(place.desc)}</p>
+      <div class="travel-chip"><span aria-hidden="true">${escapeHtml(place.travelIcon)}</span><strong>${escapeHtml(place.travel)}</strong></div>
+      <a class="map-link" href="${safeLink(place.map)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(place.name)} 네이버지도에서 보기">네이버지도</a>
+    </article>
+  `;
+}
+
+function renderGateFeature(gate) {
+  if (!gate.heroImage) return '';
+  const highlights = Array.isArray(gate.highlights)
+    ? `<ul class="highlight-list">${gate.highlights.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
+    : '';
+
+  return `
+    <div class="hq-feature">
+      <img src="${escapeHtml(gate.heroImage)}" alt="${escapeHtml(gate.heroAlt || gate.title)}" loading="eager" decoding="async">
+      <div class="hq-feature-copy">
+        <p class="hq-feature-kicker">HANA DREAM TOWN · GROUP HQ</p>
+        <h3>청라의 새로운 업무 랜드마크</h3>
+        <p>업무, 휴식, 미팅, 교류가 하나의 흐름으로 이어지는 청라 HQ의 공간 콘셉트를 만나보세요.</p>
+        ${highlights}
+      </div>
+    </div>
+    <p class="hq-source-note"><span aria-hidden="true">ℹ️</span><span>공간 이미지는 제공된 콘셉트 자료를 바탕으로 구성했으며, 세부 배치와 실제 출입 가능 공간은 운영 안내에 따라 달라질 수 있습니다.</span></p>
+  `;
+}
+
+function renderGateList() {
+  if (!listEl) return;
+  listEl.innerHTML = GATES.map((gate) => `
+    <section class="gate-block" id="gate-${escapeHtml(gate.id)}" data-tone="${escapeHtml(gate.tone)}" data-gate-section="${escapeHtml(gate.id)}">
+      <header class="gate-head">
+        <div class="gate-title"><span aria-hidden="true">${gate.icon}</span><span>${escapeHtml(gate.title)}</span></div>
+        <div class="gate-subtitle">${escapeHtml(gate.subtitle)}</div>
+      </header>
+      <p class="gate-intro">${escapeHtml(gate.intro)}</p>
+      ${renderGateFeature(gate)}
+      <div class="place-grid ${gate.id === 'hq' ? 'hq-grid' : ''}">
+        ${gate.places.map((place, index) => renderPlaceCard(place, gate.id, index)).join('')}
+      </div>
+    </section>
+  `).join('');
+}
+
+function playableGates() {
+  return GATES.filter((gate) => gate.roulette !== false && gate.places.some((place) => !place.coming));
+}
+
+function renderRouletteSelect() {
+  if (!rouletteGateEl) return;
+  const gates = playableGates();
+  rouletteGateEl.innerHTML = gates.map((gate) => `
+    <option value="${escapeHtml(gate.id)}">${gate.icon} ${escapeHtml(gate.label)}</option>
+  `).join('');
+  rouletteGateEl.value = gates[0]?.id || '';
+}
+
+function drawWheel(gate) {
+  if (!canvas || !ctx || !gate) return;
+
+  const places = gate.places.filter((place) => !place.coming);
+  if (!places.length) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    return;
+  }
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const size = 420;
+  canvas.width = Math.round(size * dpr);
+  canvas.height = Math.round(size * dpr);
+  canvas.style.width = `${size}px`;
+  canvas.style.maxWidth = '100%';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, size, size);
+
+  const centerX = size / 2;
+  const centerY = size / 2;
+  const radius = size / 2 - 14;
+  const slice = Math.PI * 2 / places.length;
+
+  places.forEach((place, index) => {
+    const start = index * slice;
+    const end = (index + 1) * slice;
+
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    ctx.arc(centerX, centerY, radius, start, end);
+    ctx.closePath();
+    ctx.fillStyle = wheelColors[index % wheelColors.length];
+    ctx.fill();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = 'rgba(255,255,255,.92)';
+    ctx.stroke();
+
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    ctx.rotate(start + slice / 2);
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = index >= 3 ? '#00463c' : '#ffffff';
+    ctx.font = '900 18px system-ui, sans-serif';
+    const label = place.name.length > 8 ? `${place.name.slice(0, 8)}…` : place.name;
+    ctx.fillText(label, radius - 24, 0);
+    ctx.restore();
+  });
+
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, 58, 0, Math.PI * 2);
+  ctx.fillStyle = '#00463c';
+  ctx.fill();
+  ctx.lineWidth = 7;
+  ctx.strokeStyle = '#ffffff';
+  ctx.stroke();
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = '1000 23px system-ui, sans-serif';
+  ctx.fillText('시작', centerX, centerY + 1);
+}
+
+function showRouletteResult(gate, place) {
+  if (!resultEl) return;
+  resultEl.innerHTML = `
+    <span>${escapeHtml(gate.label)}</span>
+    <strong>${escapeHtml(place.name)}</strong>
+    <p>${escapeHtml(place.travelIcon)} ${escapeHtml(place.travel)} · ${escapeHtml(place.mood)}</p>
+    <a class="map-link" href="${safeLink(place.map)}" target="_blank" rel="noopener noreferrer">네이버지도에서 길 확인</a>
+  `;
+}
+
+function spinWheel() {
+  if (isSpinning || !rouletteGateEl || !canvas || !spinBtn || !resultEl) return;
+
+  const gate = gateById(rouletteGateEl.value);
+  const places = gate.places.filter((place) => !place.coming);
+  if (!places.length) return;
+
+  isSpinning = true;
+  spinBtn.disabled = true;
+  rouletteGateEl.disabled = true;
+
+  const pickedIndex = Math.floor(Math.random() * places.length);
+  const sliceDegrees = 360 / places.length;
+  const selectedCenter = pickedIndex * sliceDegrees + sliceDegrees / 2;
+  const desiredAngle = 270 - selectedCenter;
+  const normalizedCurrent = ((currentRotation % 360) + 360) % 360;
+  const forwardAdjustment = ((desiredAngle - normalizedCurrent) % 360 + 360) % 360;
+  const extraTurns = 360 * (5 + Math.floor(Math.random() * 3));
+  currentRotation += extraTurns + forwardAdjustment;
+
+  canvas.style.transform = `rotate(${currentRotation}deg)`;
+  resultEl.innerHTML = '<span>SPINNING</span><strong>오늘의 장소를 고르는 중...</strong><p>Gate와 이동 정보를 함께 확인해요.</p>';
+
+  const finishDelay = prefersReducedMotion ? 120 : 4300;
+  window.setTimeout(() => {
+    showRouletteResult(gate, places[pickedIndex]);
+    spinBtn.disabled = false;
+    rouletteGateEl.disabled = false;
+    isSpinning = false;
+  }, finishDelay);
+}
+
+function openSpaceModal(gateId, placeIndex, triggerElement) {
+  if (!spaceModal || !modalImage || !modalType || !modalTitle || !modalMood || !modalDesc) return;
+  const gate = gateById(gateId);
+  const place = gate?.places?.[Number(placeIndex)];
+  if (!place || !place.internal) return;
+
+  lastFocusedElement = triggerElement || document.activeElement;
+  modalImage.src = place.image;
+  modalImage.alt = place.imageAlt || place.name;
+  modalType.textContent = place.type;
+  modalTitle.textContent = place.name;
+  modalMood.textContent = place.mood;
+  modalDesc.textContent = place.desc;
+  spaceModal.hidden = false;
+  document.body.classList.add('modal-open');
+  modalCloseBtn?.focus();
+}
+
+function closeSpaceModal() {
+  if (!spaceModal || spaceModal.hidden) return;
+  spaceModal.hidden = true;
+  document.body.classList.remove('modal-open');
+  if (modalImage) modalImage.src = '';
+  if (lastFocusedElement instanceof HTMLElement) lastFocusedElement.focus();
+}
+
+function setupSpaceModal() {
+  listEl?.addEventListener('click', (event) => {
+    const button = event.target.closest('.detail-btn');
+    if (!button) return;
+    openSpaceModal(button.dataset.spaceGate, button.dataset.spaceIndex, button);
+  });
+
+  modalCloseBtn?.addEventListener('click', closeSpaceModal);
+  spaceModal?.querySelector('[data-modal-close]')?.addEventListener('click', closeSpaceModal);
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && spaceModal && !spaceModal.hidden) {
+      closeSpaceModal();
+    }
+  });
+}
+
+function resolvePublicUrl() {
+  const localHosts = new Set(['localhost', '127.0.0.1', '::1']);
+  if (window.location.protocol === 'file:' || localHosts.has(window.location.hostname)) {
+    return DEFAULT_DEPLOY_URL;
+  }
+  return window.location.href.split('#')[0];
+}
+
+function qrProviderUrl(providerIndex, url) {
+  const encodedUrl = encodeURIComponent(url);
+  const providers = [
+    `https://quickchart.io/qr?size=300&margin=1&text=${encodedUrl}`,
+    `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=8&data=${encodedUrl}`
+  ];
+  return providers[providerIndex] || providers[0];
+}
+
+function setupQr() {
+  if (!qrImage || !copyLinkBtn) return;
+  const publicUrl = resolvePublicUrl();
+  activeQrProvider = 0;
+  qrImage.src = qrProviderUrl(activeQrProvider, publicUrl);
+  qrImage.addEventListener('error', () => {
+    if (activeQrProvider >= 1) {
+      qrImage.alt = 'QR 코드를 불러오지 못했습니다. 현재 주소 복사 버튼을 이용해 주세요.';
+      return;
+    }
+    activeQrProvider += 1;
+    qrImage.src = qrProviderUrl(activeQrProvider, publicUrl);
+  });
+
+  copyLinkBtn.addEventListener('click', async () => {
+    const originalText = '현재 주소 복사';
+    try {
+      await navigator.clipboard.writeText(publicUrl);
+      copyLinkBtn.textContent = '복사 완료';
+      window.setTimeout(() => {
+        copyLinkBtn.textContent = originalText;
+      }, 1500);
+    } catch (error) {
+      window.prompt('아래 주소를 복사하세요.', publicUrl);
+    }
+  });
+}
+
+function setupActiveGateNav() {
+  if (!navEl || !('IntersectionObserver' in window)) return;
+  const links = new Map(
+    [...navEl.querySelectorAll('[data-gate-link]')].map((link) => [link.dataset.gateLink, link])
+  );
+  const sections = [...document.querySelectorAll('[data-gate-section]')];
+
+  const setActive = (gateId) => {
+    links.forEach((link, id) => link.classList.toggle('active', id === gateId));
+    const activeLink = links.get(gateId);
+    if (activeLink) {
+      const targetLeft = activeLink.offsetLeft - (navEl.clientWidth - activeLink.offsetWidth) / 2;
+      navEl.scrollTo({ left: Math.max(0, targetLeft), behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+    }
+  };
+
+  navEl.addEventListener('click', (event) => {
+    const link = event.target.closest('[data-gate-link]');
+    if (link) setActive(link.dataset.gateLink);
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    const visibleEntries = entries
+      .filter((entry) => entry.isIntersecting)
+      .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+    if (visibleEntries[0]) {
+      setActive(visibleEntries[0].target.dataset.gateSection);
+    }
+  }, {
+    rootMargin: '-28% 0px -58% 0px',
+    threshold: [0, 0.05, 0.2]
+  });
+
+  sections.forEach((section) => observer.observe(section));
+}
+
+function setupEvents() {
+  rouletteGateEl?.addEventListener('change', (event) => {
+    if (isSpinning) return;
+    currentRotation = 0;
+    if (canvas) canvas.style.transform = 'rotate(0deg)';
+    drawWheel(gateById(event.target.value));
+    if (resultEl) {
+      resultEl.innerHTML = '<span>READY</span><strong>Gate를 선택하고 룰렛을 돌려주세요</strong><p>추천 장소와 이동시간·거리까지 바로 확인할 수 있어요.</p>';
+    }
+  });
+
+  spinBtn?.addEventListener('click', spinWheel);
+
+  window.addEventListener('resize', () => {
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(() => {
+      if (!isSpinning && rouletteGateEl?.value) {
+        drawWheel(gateById(rouletteGateEl.value));
+      }
+    }, 120);
+  });
+}
+
+function init() {
+  if (!Array.isArray(GATES) || !GATES.length) return;
+  renderNav();
+  renderGateList();
+  renderRouletteSelect();
+  drawWheel(gateById(rouletteGateEl?.value));
+  setupEvents();
+  setupSpaceModal();
+  setupQr();
+  setupActiveGateNav();
+}
+
+init();
