@@ -1,4 +1,4 @@
-:root{
+﻿:root{
   --hana:#009178;
   --hana-dark:#006c5a;
   --hana-deep:#00463c;
@@ -102,7 +102,8 @@ img{max-width:100%}
 .hq-source-note{display:flex;align-items:flex-start;gap:8px;margin:12px 18px 0;padding:11px 12px;border-radius:14px;background:#f4fffb;color:#466d66;border:1px solid var(--line);font-size:12px;line-height:1.5}
 
 .place-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:14px 16px 18px}
-.place-grid.hq-grid{grid-template-columns:repeat(3,minmax(0,1fr));padding-top:12px}
+.place-grid.hq-grid{grid-template-columns:repeat(4,minmax(0,1fr));padding-top:12px}
+.place-grid.three-grid{grid-template-columns:repeat(3,minmax(0,1fr));max-width:920px}
 .place-card{display:flex;flex-direction:column;gap:8px;min-height:210px;border-radius:18px;background:#fff;border:1px solid var(--line);box-shadow:0 10px 22px rgba(0,70,60,.06);padding:14px;overflow:hidden;transition:transform .18s ease,box-shadow .18s ease}
 .place-card:hover{transform:translateY(-2px);box-shadow:0 16px 30px rgba(0,70,60,.11)}
 .place-card.placeholder{align-items:center;justify-content:center;text-align:center;background:linear-gradient(180deg,#fff,#fafafa)}
@@ -249,23 +250,9 @@ footer span{display:block;margin-top:4px;color:#e4fff6;font-weight:800}
   *,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
 }
 
-/* 외부 CSS 분리형 안정화 */
-.gate-nav{
-  overscroll-behavior-inline:contain;
-  -webkit-overflow-scrolling:touch;
-  scroll-snap-type:none;
-  overflow-anchor:none;
-}
-.gate-nav a{scroll-snap-align:none}
-
-/* 이미지 로딩 전에도 카드 높이가 급격히 흔들리지 않도록 유지 */
-.card-media img,
-.hq-feature img,
-.modal-media img{
-  background:#eaf7f3;
-}
-
-/* 세로형 매장 사진은 중심부가 자연스럽게 보이도록 조정 */
-.place-card.external-photo .card-media img{
-  object-position:center 48%;
-}
+/* Final leaflet alignment */
+.gate-route-note{margin:0 16px 16px;padding:10px 12px;border-radius:13px;background:#fff9e8;color:#6e5a20;border:1px solid rgba(187,145,31,.2);font-size:12px;line-height:1.5}
+.place-card[data-place-kind="meeting"] .card-media img{object-position:center}
+.place-card[data-place-kind="lunch"] .card-media img{object-position:center 45%}
+@media(max-width:900px){.place-grid.three-grid{grid-template-columns:repeat(2,minmax(0,1fr));max-width:none}}
+@media(max-width:430px){.place-grid.three-grid{grid-template-columns:1fr}}

@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 let currentRotation = 0;
 let isSpinning = false;
@@ -88,10 +88,45 @@ function renderPlaceCard(place, gateId, index) {
     `;
   }
 
+  const rating = Number.isFinite(Number(place.rating))
+    ? Math.max(0, Math.min(5, Number(place.rating)))
+    : 0;
+  const ratingHtml = rating
+    ? `<span class="card-rating" aria-label="추천도 ${rating}점">${'★'.repeat(rating)}<span class="empty">${'★'.repeat(5 - rating)}</span></span>`
+    : '';
+  const photoCredit = place.photoCredit
+    ? `<span class="photo-credit">${escapeHtml(place.photoCredit)}</span>`
+    : '';
+
+  if (place.image) {
+    return `
+      <article class="place-card has-media external-photo" data-place-kind="${escapeHtml(gateId)}">
+        <div class="card-media">
+          <img src="${escapeHtml(place.image)}" alt="${escapeHtml(place.imageAlt || place.name)}" loading="lazy" decoding="async">
+          ${photoCredit}
+        </div>
+        <div class="card-content">
+          <span class="type">${escapeHtml(place.type)}</span>
+          <div class="card-title-row">
+            <h3>${escapeHtml(place.name)}</h3>
+            ${ratingHtml}
+          </div>
+          <p class="mood">${escapeHtml(place.mood)}</p>
+          <p class="desc">${escapeHtml(place.desc)}</p>
+          <div class="travel-chip"><span aria-hidden="true">${escapeHtml(place.travelIcon)}</span><strong>${escapeHtml(place.travel)}</strong></div>
+          <a class="map-link" href="${safeLink(place.map)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(place.name)} 네이버지도에서 보기">네이버지도</a>
+        </div>
+      </article>
+    `;
+  }
+
   return `
     <article class="place-card">
       <span class="type">${escapeHtml(place.type)}</span>
-      <h3>${escapeHtml(place.name)}</h3>
+      <div class="card-title-row">
+        <h3>${escapeHtml(place.name)}</h3>
+        ${ratingHtml}
+      </div>
       <p class="mood">${escapeHtml(place.mood)}</p>
       <p class="desc">${escapeHtml(place.desc)}</p>
       <div class="travel-chip"><span aria-hidden="true">${escapeHtml(place.travelIcon)}</span><strong>${escapeHtml(place.travel)}</strong></div>
@@ -111,8 +146,8 @@ function renderGateFeature(gate) {
       <img src="${escapeHtml(gate.heroImage)}" alt="${escapeHtml(gate.heroAlt || gate.title)}" loading="eager" decoding="async">
       <div class="hq-feature-copy">
         <p class="hq-feature-kicker">HANA DREAM TOWN · GROUP HQ</p>
-        <h3>청라의 새로운 업무 랜드마크</h3>
-        <p>업무, 휴식, 미팅, 교류가 하나의 흐름으로 이어지는 청라 HQ의 공간 콘셉트를 만나보세요.</p>
+        <h3>사옥 안에서 완성되는 하나의 업무 생태계</h3>
+        <p>걷고, 일하고, 쉬고, 교류하는 경험이 하나의 흐름으로 연결되는 청라 HQ의 핵심 공간을 만나보세요.</p>
         ${highlights}
       </div>
     </div>
@@ -130,7 +165,7 @@ function renderGateList() {
       </header>
       <p class="gate-intro">${escapeHtml(gate.intro)}</p>
       ${renderGateFeature(gate)}
-      <div class="place-grid ${gate.id === 'hq' ? 'hq-grid' : ''}">
+      <div class="place-grid ${gate.id === 'hq' ? 'hq-grid' : ''} ${gate.places.length === 3 ? 'three-grid' : ''}">
         ${gate.places.map((place, index) => renderPlaceCard(place, gate.id, index)).join('')}
       </div>
     </section>
@@ -344,39 +379,121 @@ function setupQr() {
 }
 
 function setupActiveGateNav() {
-  if (!navEl || !('IntersectionObserver' in window)) return;
+  if (!navEl) return;
+
   const links = new Map(
     [...navEl.querySelectorAll('[data-gate-link]')].map((link) => [link.dataset.gateLink, link])
   );
   const sections = [...document.querySelectorAll('[data-gate-section]')];
+  let lockedGateId = null;
+  let scrollEndTimer = null;
+  let fallbackUnlockTimer = null;
+  let programmaticScrollStarted = false;
 
-  const setActive = (gateId) => {
-    links.forEach((link, id) => link.classList.toggle('active', id === gateId));
-    const activeLink = links.get(gateId);
-    if (activeLink) {
-      const targetLeft = activeLink.offsetLeft - (navEl.clientWidth - activeLink.offsetWidth) / 2;
-      navEl.scrollTo({ left: Math.max(0, targetLeft), behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+  // 탭 전체를 매번 가운데로 이동시키지 않고, 화면 밖으로 가려진 경우에만 최소한으로 노출합니다.
+  const revealLink = (link) => {
+    if (!link) return;
+    const navRect = navEl.getBoundingClientRect();
+    const linkRect = link.getBoundingClientRect();
+    const edgePadding = 8;
+    let delta = 0;
+
+    if (linkRect.left < navRect.left + edgePadding) {
+      delta = linkRect.left - navRect.left - edgePadding;
+    } else if (linkRect.right > navRect.right - edgePadding) {
+      delta = linkRect.right - navRect.right + edgePadding;
     }
+
+    if (Math.abs(delta) > 1) {
+      navEl.scrollBy({
+        left: delta,
+        behavior: prefersReducedMotion ? 'auto' : 'smooth'
+      });
+    }
+  };
+
+  const setActive = (gateId, reveal = false) => {
+    links.forEach((link, id) => {
+      const isActive = id === gateId;
+      link.classList.toggle('active', isActive);
+      link.setAttribute('aria-current', isActive ? 'location' : 'false');
+    });
+
+    if (reveal) revealLink(links.get(gateId));
+  };
+
+  const releaseClickLock = () => {
+    if (!lockedGateId) return;
+    const gateId = lockedGateId;
+    lockedGateId = null;
+    programmaticScrollStarted = false;
+    window.clearTimeout(scrollEndTimer);
+    window.clearTimeout(fallbackUnlockTimer);
+    setActive(gateId, false);
   };
 
   navEl.addEventListener('click', (event) => {
     const link = event.target.closest('[data-gate-link]');
-    if (link) setActive(link.dataset.gateLink);
-  });
+    if (!link) return;
 
-  const observer = new IntersectionObserver((entries) => {
-    const visibleEntries = entries
-      .filter((entry) => entry.isIntersecting)
-      .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-    if (visibleEntries[0]) {
-      setActive(visibleEntries[0].target.dataset.gateSection);
+    const gateId = link.dataset.gateLink;
+    const target = document.getElementById(`gate-${gateId}`);
+    if (!target) return;
+
+    event.preventDefault();
+    lockedGateId = gateId;
+    programmaticScrollStarted = false;
+    setActive(gateId, true);
+
+    // 주소의 해시는 갱신하되, 브라우저의 기본 점프 동작은 막습니다.
+    if (history.replaceState) {
+      history.replaceState(null, '', `#gate-${gateId}`);
     }
-  }, {
-    rootMargin: '-28% 0px -58% 0px',
-    threshold: [0, 0.05, 0.2]
+
+    target.scrollIntoView({
+      behavior: prefersReducedMotion ? 'auto' : 'smooth',
+      block: 'start'
+    });
+
+    window.clearTimeout(fallbackUnlockTimer);
+    fallbackUnlockTimer = window.setTimeout(releaseClickLock, prefersReducedMotion ? 160 : 1800);
   });
 
-  sections.forEach((section) => observer.observe(section));
+  // 스크롤 도중에는 지나가는 다른 Gate가 선택 상태를 빼앗지 못하게 합니다.
+  window.addEventListener('scroll', () => {
+    if (!lockedGateId) return;
+    programmaticScrollStarted = true;
+    window.clearTimeout(scrollEndTimer);
+    scrollEndTimer = window.setTimeout(releaseClickLock, 180);
+  }, { passive: true });
+
+  if ('onscrollend' in window) {
+    window.addEventListener('scrollend', () => {
+      if (lockedGateId && programmaticScrollStarted) releaseClickLock();
+    }, { passive: true });
+  }
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      if (lockedGateId) {
+        setActive(lockedGateId, false);
+        return;
+      }
+
+      const visibleEntries = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+      if (visibleEntries[0]) {
+        setActive(visibleEntries[0].target.dataset.gateSection, false);
+      }
+    }, {
+      rootMargin: '-28% 0px -58% 0px',
+      threshold: [0, 0.05, 0.2]
+    });
+
+    sections.forEach((section) => observer.observe(section));
+  }
 }
 
 function setupEvents() {
