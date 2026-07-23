@@ -1,16 +1,20 @@
-# 하나로 PASS 최종본 — 사용자 제공 사진 반영
+# 하나로 PASS
 
-## 이번 수정
-- `assets/lunch-yangyang.png`: 사용자 제공 양양입암막국수 사진 적용
-- `assets/lunch-sangchai.png`: 사용자 제공 상차이 사진 적용
-- `assets/local-03.png`: 사용자 제공 커낼웨이 수변공원 사진 적용
+GitHub Pages 업로드용 정적 웹사이트입니다.
 
-## 실행
-프로젝트 폴더에서 아래 명령을 실행합니다.
+## 파일 구조
 
-```bash
-py -3 -m http.server 8007
-```
+- `index.html`: 화면 구조
+- `style.css`: 디자인 및 반응형 스타일
+- `data.js`: Gate 및 장소 정보
+- `script.js`: 룰렛, 메뉴 이동, 모달, QR 기능
+- `pictures/`: 로고, 캐릭터, HQ 및 Gate별 이미지
 
-브라우저에서 `http://localhost:8007/`로 접속하세요.
-GitHub Pages에는 이 폴더 안의 파일과 `assets` 폴더를 구조 그대로 올려야 합니다.
+## 이미지 파일명
+
+- `pictures/gate1/lunch1.png` ~ `lunch4.png`
+- `pictures/gate2/meet1.png` ~ `meet3.png`
+- `pictures/gate3/after-01.png` ~ `after-04.png`
+- `pictures/gate4/local-01.png` ~ `local-04.png`
+
+저장소 최상단에 이 파일들과 `pictures` 폴더를 그대로 업로드하면 됩니다.

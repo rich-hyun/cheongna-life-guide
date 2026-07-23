@@ -94,16 +94,11 @@ function renderPlaceCard(place, gateId, index) {
   const ratingHtml = rating
     ? `<span class="card-rating" aria-label="추천도 ${rating}점">${'★'.repeat(rating)}<span class="empty">${'★'.repeat(5 - rating)}</span></span>`
     : '';
-  const photoCredit = place.photoCredit
-    ? `<span class="photo-credit">${escapeHtml(place.photoCredit)}</span>`
-    : '';
-
   if (place.image) {
     return `
       <article class="place-card has-media external-photo" data-place-kind="${escapeHtml(gateId)}">
         <div class="card-media">
           <img src="${escapeHtml(place.image)}" alt="${escapeHtml(place.imageAlt || place.name)}" loading="lazy" decoding="async">
-          ${photoCredit}
         </div>
         <div class="card-content">
           <span class="type">${escapeHtml(place.type)}</span>
@@ -151,7 +146,6 @@ function renderGateFeature(gate) {
         ${highlights}
       </div>
     </div>
-    <p class="hq-source-note"><span aria-hidden="true">ℹ️</span><span>공간 이미지는 제공된 콘셉트 자료를 바탕으로 구성했으며, 세부 배치와 실제 출입 가능 공간은 운영 안내에 따라 달라질 수 있습니다.</span></p>
   `;
 }
 
