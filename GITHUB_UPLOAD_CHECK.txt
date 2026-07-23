@@ -1,0 +1,10 @@
+GitHub 저장소 최상단에 다음 항목이 바로 보여야 합니다.
+index.html
+style.css
+data.js
+script.js
+assets/
+.nojekyll
+
+index.html 첫 줄은 <!doctype html> 이어야 합니다.
+Pages 설정: main / (root)
