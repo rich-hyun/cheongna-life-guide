@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ko">
 <head>
   <meta charset="utf-8">
@@ -10,7 +10,7 @@
   <meta property="og:description" content="청라 HQ부터 런치 Gate, 미팅 Gate, 애프터 Gate, 하나로컬 Gate까지">
   <meta property="og:type" content="website">
   <link rel="icon" href="logo_stack.png" type="image/png">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=20260721-4">
 </head>
 <body>
   <div class="page-bg" aria-hidden="true"></div>
@@ -28,7 +28,7 @@
         <div class="ticket-copy">
           <p class="eyebrow light">WELCOME TO 청라,<br>TOGETHER WITH 하나</p>
           <h1 id="mainTitle">하나로<br>PASS</h1>
-          <p class="hero-desc">청라 HQ를 중심으로 내부 공간과 4개의 Gate를 탐색하는 모바일 가이드</p>
+          <p class="hero-desc">청라 HQ를 중심으로 4개의 Gate를 탐색하는 모바일 탑승 가이드</p>
         </div>
         <div class="flight-line" aria-hidden="true">✈︎</div>
         <img class="hero-character" src="char_duo_1.png" alt="엄지를 든 하나금융그룹 캐릭터">
@@ -112,7 +112,7 @@
     </section>
   </div>
 
-  <script src="data.js"></script>
-  <script src="script.js"></script>
+  <script src="data.js?v=20260721-4"></script>
+  <script src="script.js?v=20260721-4"></script>
 </body>
 </html>
