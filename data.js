@@ -8,7 +8,7 @@
     "icon": "🏢",
     "tone": "emerald",
     "roulette": false,
-    "heroImage": "assets/hq-exterior.webp",
+    "heroImage": "hq-exterior.webp",
     "heroAlt": "하나금융그룹 청라 HQ 외관 콘셉트 이미지",
     "intro": "청라 HQ의 핵심 공간을 리플렛 기준으로 정리했습니다. 실제 운영·출입 가능 범위와 세부 시설은 현장 안내에 따라 달라질 수 있습니다.",
     "highlights": [
@@ -23,7 +23,7 @@
         "type": "공용 동선",
         "mood": "1층부터 15층까지 이어지는 약 1.1km 보행 램프",
         "desc": "365일 지역사회와 호흡하려는 하나금융의 철학을 담은 열린 동선입니다.",
-        "image": "assets/hq-atrium.webp",
+        "image": "hq-atrium.webp",
         "imageAlt": "여러 층을 연결하는 청라 HQ 내부 동선 콘셉트 이미지",
         "internal": true
       },
@@ -32,7 +32,7 @@
         "type": "워크스페이스",
         "mood": "원하는 장소에서 자유롭게 몰입하고 협업하는 공간",
         "desc": "공간의 경계를 낮춰 개인 업무와 팀 협업을 유연하게 전환할 수 있도록 구성된 업무 공간입니다.",
-        "image": "assets/hq-collaboration.webp",
+        "image": "hq-collaboration.webp",
         "imageAlt": "청라 HQ 개방형 업무·협업 공간 콘셉트 이미지",
         "internal": true
       },
@@ -41,7 +41,7 @@
         "type": "루프·휴식",
         "mood": "청라 전경과 서해 바다를 바라보며 쉬어가는 공간",
         "desc": "일상 속 재충전을 돕는 청라 HQ 상부의 힐링 공간입니다.",
-        "image": "assets/hq-rooftop.webp",
+        "image": "hq-rooftop.webp",
         "imageAlt": "청라 HQ 스카이파크 콘셉트 이미지",
         "internal": true
       },
@@ -50,7 +50,7 @@
         "type": "임직원 편의",
         "mood": "일상 속 재충전을 위한 세심한 편의 공간",
         "desc": "식사와 휴식 이후의 동선까지 고려해 임직원 편의와 컨디션 관리를 지원합니다.",
-        "image": "assets/hq-lounge.webp",
+        "image": "hq-lounge.webp",
         "imageAlt": "청라 HQ 임직원 편의 공간 콘셉트 이미지",
         "internal": true
       }
@@ -68,7 +68,7 @@
     "places": [
       {
         "name": "양양입암막국수 THE청라",
-        "image": "assets/lunch-yangyang.png",
+        "image": "lunch-yangyang.png",
         "imageAlt": "양양입암막국수 THE청라 매장 외관",
         "photoCredit": "사용자 제공 현장 사진",
         "type": "막국수",
@@ -80,7 +80,7 @@
       },
       {
         "name": "삼대청국장 청라본점",
-        "image": "assets/lunch-samdae.png",
+        "image": "lunch-samdae.png",
         "imageAlt": "삼대청국장 청라본점 매장 외관",
         "photoCredit": "사용자 제공 현장 사진",
         "type": "청국장·한식",
@@ -92,7 +92,7 @@
       },
       {
         "name": "두진옥 수제순두부",
-        "image": "assets/lunch-dujinok.png",
+        "image": "lunch-dujinok.png",
         "imageAlt": "두진옥 수제순두부 매장 외관",
         "photoCredit": "사용자 제공 현장 사진",
         "type": "순두부·한식",
@@ -104,7 +104,7 @@
       },
       {
         "name": "상차이 청라점",
-        "image": "assets/lunch-sangchai.png",
+        "image": "lunch-sangchai.png",
         "imageAlt": "상차이 청라점 매장 외관",
         "photoCredit": "사용자 제공 현장 사진",
         "type": "중식",
@@ -128,7 +128,7 @@
     "places": [
       {
         "name": "Café 84KM",
-        "image": "assets/meeting-84km.png",
+        "image": "meeting-84km.png",
         "imageAlt": "Café 84KM 매장 외관",
         "photoCredit": "제공 리플렛",
         "type": "감성 카페",
@@ -140,7 +140,7 @@
       },
       {
         "name": "6층커피집",
-        "image": "assets/meeting-6floor.png",
+        "image": "meeting-6floor.png",
         "imageAlt": "6층커피집 내부 좌석",
         "photoCredit": "제공 리플렛",
         "type": "루프탑 카페",
@@ -152,7 +152,7 @@
       },
       {
         "name": "육츠커피 플래그십 스토어",
-        "image": "assets/meeting-yukts.png",
+        "image": "meeting-yukts.png",
         "imageAlt": "육츠커피 플래그십 스토어 내부",
         "photoCredit": "제공 리플렛",
         "type": "플래그십 카페",
@@ -176,7 +176,7 @@
     "places": [
       {
         "name": "곱창남 청라점",
-        "image": "assets/after-01.png",
+        "image": "after-01.png",
         "imageAlt": "곱창 요리가 차려진 곱창남 청라점 참고 이미지",
         "photoCredit": "사용자 제공 시안",
         "type": "곱창·회식",
@@ -188,7 +188,7 @@
       },
       {
         "name": "쇼미더크랩 청라점",
-        "image": "assets/after-02.png",
+        "image": "after-02.png",
         "imageAlt": "시푸드 메뉴 참고 이미지",
         "photoCredit": "사용자 제공 시안",
         "type": "시푸드",
@@ -200,7 +200,7 @@
       },
       {
         "name": "오늘와인한잔 청라수변공원점",
-        "image": "assets/after-03.png",
+        "image": "after-03.png",
         "imageAlt": "와인과 곁들임 메뉴 참고 이미지",
         "photoCredit": "사용자 제공 시안",
         "type": "와인바",
@@ -212,7 +212,7 @@
       },
       {
         "name": "유케집 청라본점",
-        "image": "assets/after-04.png",
+        "image": "after-04.png",
         "imageAlt": "육회 메뉴 참고 이미지",
         "photoCredit": "사용자 제공 시안",
         "type": "육회·한잔",
@@ -236,7 +236,7 @@
     "places": [
       {
         "name": "정서진",
-        "image": "assets/local-01.png",
+        "image": "local-01.png",
         "imageAlt": "노을이 아름다운 정서진",
         "photoCredit": "제공 리플렛",
         "type": "노을 명소",
@@ -248,7 +248,7 @@
       },
       {
         "name": "아라타워 전망대",
-        "image": "assets/local-02.png",
+        "image": "local-02.png",
         "imageAlt": "아라타워 전망대",
         "photoCredit": "제공 리플렛",
         "type": "전망대",
@@ -260,7 +260,7 @@
       },
       {
         "name": "커낼웨이 수변공원",
-        "image": "assets/local-03.png",
+        "image": "local-03.png",
         "imageAlt": "청라 커낼웨이 수변 산책로",
         "photoCredit": "사용자 제공 이미지",
         "type": "수변 산책",
@@ -272,7 +272,7 @@
       },
       {
         "name": "국립생물자원관",
-        "image": "assets/local-04.png",
+        "image": "local-04.png",
         "imageAlt": "국립생물자원관 생물 전시 공간",
         "photoCredit": "제공 리플렛",
         "type": "생태·문화",
